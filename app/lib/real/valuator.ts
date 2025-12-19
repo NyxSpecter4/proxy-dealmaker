@@ -10,7 +10,8 @@ export async function calculateRealValuation(repoData: any) {
   return {
     low: await getMarketLow(repoData),
     high: await getMarketHigh(repoData),
-    confidence: await calculateConfidenceScore(repoData)
+    confidence: await calculateConfidenceScore(repoData),
+    factors: await generateValuationFactors(repoData)
   };
 }
 
@@ -36,4 +37,19 @@ async function calculateConfidenceScore(repoData: any): Promise<number> {
     repoData.lastUpdated ? 0.3 : 0,
   ];
   return Math.min(1, factors.reduce((a, b) => a + b, 0));
+}
+
+async function generateValuationFactors(repoData: any): Promise<string[]> {
+  const factors = [];
+  if (repoData.stars > 100) factors.push('Strong community engagement');
+  if (repoData.forks > 10) factors.push('Active contributor base');
+  if (repoData.language) factors.push(`Modern ${repoData.language} stack`);
+  if (repoData.lastUpdated) {
+    const daysAgo = Math.floor((Date.now() - new Date(repoData.lastUpdated).getTime()) / (1000 * 60 * 60 * 24));
+    if (daysAgo < 30) factors.push('Recently updated');
+    else factors.push('Stable codebase');
+  }
+  if (repoData.size > 10000) factors.push('Substantial codebase size');
+  if (factors.length === 0) factors.push('Emerging project with potential');
+  return factors;
 }
