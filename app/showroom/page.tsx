@@ -16,36 +16,34 @@ const YOUR_PROJECTS = [
   {
     id: 'proxy-dealmaker',
     name: 'proxy-dealmaker',
-    githubUrl: 'https://github.com/nyxspecter4/proxy-dealmaker',
-    description: 'AI-powered deal execution platform',
-    lastAnalyzed: '2024-12-19',
-    status: 'active' as const
-  },
-  // ADD YOUR 3 OTHER REAL PROJECTS HERE
-  // Example:
-  {
-    id: 'project-2',
-    name: 'your-actual-repo-name',
-    githubUrl: 'https://github.com/nyxspecter4/your-actual-repo',
-    description: 'Your real project description',
+    githubUrl: 'https://github.com/NyxSpecter4/proxy-dealmaker',
+    description: 'An autonomous AI agent that analyzes, values, and negotiates deals for software projects.',
     lastAnalyzed: '2024-12-19',
     status: 'active' as const
   },
   {
-    id: 'project-3',
-    name: 'another-real-repo',
-    githubUrl: 'https://github.com/nyxspecter4/another-real-repo',
-    description: 'Another real project',
-    lastAnalyzed: '2024-12-18',
+    id: 'rws-cc',
+    name: 'RWS-CC',
+    githubUrl: 'https://github.com/NyxSpecter4/RWS-CC',
+    description: 'Redwood Square Command Center',
+    lastAnalyzed: '2024-12-19',
     status: 'active' as const
   },
   {
-    id: 'project-4',
-    name: 'third-real-repo',
-    githubUrl: 'https://github.com/nyxspecter4/third-real-repo',
-    description: 'Third real project',
-    lastAnalyzed: '2024-12-17',
-    status: 'dormant' as const
+    id: 'bountywarz',
+    name: 'bountywarz',
+    githubUrl: 'https://github.com/NyxSpecter4/bountywarz',
+    description: 'Bounty-based competition platform',
+    lastAnalyzed: '2024-12-19',
+    status: 'active' as const
+  },
+  {
+    id: 'camel-racing',
+    name: 'camel-racing',
+    githubUrl: 'https://github.com/NyxSpecter4/camel-racing',
+    description: 'Camel racing simulation or betting platform',
+    lastAnalyzed: '2024-12-19',
+    status: 'active' as const
   }
 ];
 
