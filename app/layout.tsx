@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CodeMidas - Your 24/7 AI Co-Founder",
-  description: "Finds buyers, negotiates deals, and secures letters of intent for your software projects—autonomously.",
+  title: "CodeMidas - AI-Powered Code Valuation",
+  description: "Turn your codebase into capital with AI-driven valuation and strategic exits.",
 };
 
 export default function RootLayout({
