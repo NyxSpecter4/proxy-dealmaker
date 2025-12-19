@@ -10,8 +10,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Check auth status
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user)
+    supabase.auth.getUser().then(({ data }: { data: { user: any } }) => {
+      setUser(data.user)
       setLoading(false)
     })
   }, [])
