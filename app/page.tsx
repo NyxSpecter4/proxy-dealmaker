@@ -37,9 +37,9 @@ export default function CompanySplashPage() {
         <div className="max-w-4xl mx-auto text-center">
           {/* SINGLE CLEAR HEADLINE */}
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Strategic Software Acquisitions
-            <span className="block text-3xl md:text-4xl text-cyan-300 mt-4">
-              Powered by AI Intelligence
+            Code<span className="text-amber-400">Midas</span>
+            <span className="block text-3xl md:text-4xl text-gray-300 mt-4">
+              AI That Turns Code to Capital
             </span>
           </h1>
 
