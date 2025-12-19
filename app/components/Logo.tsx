@@ -1,43 +1,34 @@
-// app/components/Logo.tsx - CodeMidas
+// app/components/Logo.tsx - FINAL
 'use client';
 
-import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
-export default function Logo({ size = 'default' }: { size?: 'small' | 'default' | 'large' }) {
-  const sizes = {
-    small: 'w-8 h-8 text-base',
-    default: 'w-12 h-12 text-2xl',
-    large: 'w-16 h-16 text-3xl'
-  };
-
+export default function Logo() {
   return (
     <Link href="/" className="flex items-center space-x-3 group">
-      {/* Midas Circuit Symbol */}
-      <div className={`${sizes[size]} relative bg-gradient-to-br from-amber-700 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/30`}>
-        {/* Circuit M */}
-        <div className="relative w-2/3 h-2/3">
-          {/* Left vertical */}
-          <div className="absolute left-0 top-0 w-1 h-full bg-white"></div>
-          {/* Diagonal 1 */}
-          <div className="absolute left-1 top-0 w-3 h-1 bg-white transform rotate-45 origin-top-left"></div>
-          {/* Diagonal 2 */}
-          <div className="absolute left-1 bottom-0 w-3 h-1 bg-white transform -rotate-45 origin-bottom-left"></div>
-          {/* Right vertical */}
-          <div className="absolute right-0 top-0 w-1 h-full bg-white"></div>
+      {/* Specter ghost with '9' badge */}
+      <div className="relative">
+        {/* Ghost body */}
+        <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-shadow">
+          {/* Circuit lines */}
+          <div className="absolute top-3 left-2 right-2 h-0.5 bg-yellow-300/80 group-hover:bg-yellow-300 transition-colors"></div>
+          <div className="absolute top-5 left-2 right-2 h-0.5 bg-yellow-300/80 group-hover:bg-yellow-300 transition-colors"></div>
+          <div className="absolute top-7 left-2 right-2 h-0.5 bg-yellow-300/80 group-hover:bg-yellow-300 transition-colors"></div>
         </div>
         
-        {/* AI sparkle */}
-        <Sparkles className="absolute -top-1 -right-1 w-3 h-3 text-amber-200" />
+        {/* '9' badge - prominent position */}
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-400 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-lg border border-white group-hover:scale-110 transition-transform">
+          9
+        </div>
       </div>
       
       {/* Text */}
       <div className="flex flex-col">
-        <span className={`font-bold ${size === 'large' ? 'text-3xl' : size === 'small' ? 'text-xl' : 'text-2xl'} tracking-tight`}>
-          Code<span className="text-amber-400">Midas</span>
+        <span className="text-2xl font-bold tracking-tight group-hover:text-purple-600 transition-colors">
+          Specter<span className="text-green-400 group-hover:text-emerald-400 transition-colors">9</span>Labs
         </span>
-        <span className="text-xs text-gray-400 -mt-1 tracking-wider">
-          TURNING CODE TO CAPITAL
+        <span className="text-xs text-gray-400 -mt-1 tracking-wider group-hover:text-gray-600 transition-colors">
+          YOUR CREATIVE SOFTWARE ENGINE
         </span>
       </div>
     </Link>

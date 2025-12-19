@@ -431,7 +431,7 @@ export default function ShowroomPage() {
       <footer className="container mx-auto px-6 py-8 mt-12 border-t border-gray-200">
         <div className="text-center">
           <div className="mb-4">
-            <Logo size="small" />
+            <Logo />
           </div>
           <div className="text-sm text-gray-500">
             ShowRoom • Your AI-analyzed project portfolio • Updated in real-time
