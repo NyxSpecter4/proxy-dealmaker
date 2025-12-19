@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ProxyDealMaker - Your 24/7 AI Co-Founder",
+  title: "CodeMidas - Your 24/7 AI Co-Founder",
   description: "Finds buyers, negotiates deals, and secures letters of intent for your software projects—autonomously.",
 };
 

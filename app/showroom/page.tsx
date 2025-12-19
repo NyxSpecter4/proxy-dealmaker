@@ -21,29 +21,31 @@ const YOUR_PROJECTS = [
     lastAnalyzed: '2024-12-19',
     status: 'active' as const
   },
+  // ADD YOUR 3 OTHER REAL PROJECTS HERE
+  // Example:
   {
     id: 'project-2',
-    name: 'project-2-name',
-    githubUrl: 'https://github.com/nyxspecter4/project-2',
-    description: 'Your second project',
-    lastAnalyzed: '2024-12-18',
+    name: 'your-actual-repo-name',
+    githubUrl: 'https://github.com/nyxspecter4/your-actual-repo',
+    description: 'Your real project description',
+    lastAnalyzed: '2024-12-19',
     status: 'active' as const
   },
   {
     id: 'project-3',
-    name: 'project-3-name',
-    githubUrl: 'https://github.com/nyxspecter4/project-3',
-    description: 'Your third project',
-    lastAnalyzed: '2024-12-17',
-    status: 'dormant' as const
+    name: 'another-real-repo',
+    githubUrl: 'https://github.com/nyxspecter4/another-real-repo',
+    description: 'Another real project',
+    lastAnalyzed: '2024-12-18',
+    status: 'active' as const
   },
   {
     id: 'project-4',
-    name: 'project-4-name',
-    githubUrl: 'https://github.com/nyxspecter4/project-4',
-    description: 'Your fourth project',
-    lastAnalyzed: '2024-12-16',
-    status: 'active' as const
+    name: 'third-real-repo',
+    githubUrl: 'https://github.com/nyxspecter4/third-real-repo',
+    description: 'Third real project',
+    lastAnalyzed: '2024-12-17',
+    status: 'dormant' as const
   }
 ];
 

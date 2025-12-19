@@ -152,7 +152,7 @@ export default function CompanySplashPage() {
             <Logo size="small" />
           </div>
           <div className="text-sm text-gray-500">
-            © 2024 ProxyDealMaker. Proprietary AI deal execution platform.
+            © 2024 CodeMidas. Proprietary AI deal execution platform.
           </div>
         </div>
       </footer>
