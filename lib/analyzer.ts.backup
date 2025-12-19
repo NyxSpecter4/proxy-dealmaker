@@ -283,82 +283,30 @@ export class RepositoryAnalyzer {
   static generateValuationInsights(metrics: RepositoryMetrics, analysis: AnalysisMetrics): ValuationInsights {
     const repo = metrics.repository
     
-    // Base valuation formula with realistic market parameters
-    const starValue = 250 // Real market: $100-$500 per star (based on actual acquisitions)
-    const contributorValue = 10000 // Real: $5K-$15K per experienced contributor (market data)
-    const commitValue = 20 // Real: $10-$30 per commit (engineering cost basis)
+    // Base valuation formula (simplified)
+    const starValue = 1000 // $ per star (example)
+    const contributorValue = 5000 // $ per active contributor
+    const commitValue = 50 // $ per commit in last year
     
-    const baseValue =
+    const baseValue = 
       (repo.stargazers_count * starValue) +
       (analysis.activity.contributorCount * contributorValue) +
       (analysis.activity.commitsLastYear * commitValue)
     
-    // Apply quality multipliers based on scores
+    // Apply multipliers based on scores
     const activityMultiplier = analysis.activity.score / 100
     const communityMultiplier = analysis.community.score / 100
     const codeHealthMultiplier = analysis.codeHealth.score / 100
     const businessMultiplier = analysis.businessPotential.score / 100
     
-    const qualityMultiplier = (activityMultiplier + communityMultiplier + codeHealthMultiplier + businessMultiplier) / 4
+    const totalMultiplier = (activityMultiplier + communityMultiplier + codeHealthMultiplier + businessMultiplier) / 4
     
-    // Apply market category multiplier
-    const category = detectProjectCategory(repo)
-    const marketMultiplier = MARKET_MULTIPLIERS[category] || MARKET_MULTIPLIERS["Open Source"]
+    const estimatedValue = baseValue * totalMultiplier
     
-    const estimatedValue = baseValue * qualityMultiplier * marketMultiplier
-    
-    // Create value ranges with realistic variance
-    const low = estimatedValue * 0.6  // More realistic 40% downside
+    // Create value ranges
+    const low = estimatedValue * 0.5
     const medium = estimatedValue
-    const high = estimatedValue * 1.8 // More realistic 80% upside
-    
-    // Update valuation methodology to reflect realistic approach
-    const valuationMethodology = [
-      'Market-based comparable analysis',
-      `Industry multiple: ${marketMultiplier}x (${category} sector)`,
-      'Quality-adjusted engineering cost basis',
-      'Community engagement premium',
-    ]
-    
-    // Add category-specific value driver
-    const keyValueDrivers = [
-      {
-        driver: 'Market Category',
-        impact: 'high' as 'high' | 'medium' | 'low',
-        description: `${category} sector with ${marketMultiplier}x industry multiple`,
-      },
-      {
-        driver: 'Community Engagement',
-        impact: (analysis.community.score > 70 ? 'high' : analysis.community.score > 40 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
-        description: `Strong community with ${repo.stargazers_count} stars and ${repo.forks_count} forks`,
-      },
-      {
-        driver: 'Development Activity',
-        impact: (analysis.activity.score > 70 ? 'high' : analysis.activity.score > 40 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
-        description: `${analysis.activity.commitsLastMonth} commits in last month, ${analysis.activity.contributorCount} contributors`,
-      },
-      {
-        driver: 'Code Health',
-        impact: (analysis.codeHealth.score > 70 ? 'high' : analysis.codeHealth.score > 40 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
-        description: analysis.codeHealth.daysSinceLastCommit < 30 ? 'Recently active' : 'Limited recent activity',
-      },
-    ]
-    
-    // More realistic comparable projects
-    const comparableProjects = [
-      {
-        name: `Similar ${category} Project`,
-        url: 'https://github.com/example/similar',
-        stars: Math.round(repo.stargazers_count * (0.7 + Math.random() * 0.6)), // 70-130% of stars
-        estimatedValue: Math.round(estimatedValue * (0.8 + Math.random() * 0.4)), // 80-120% of value
-      },
-      {
-        name: 'Industry Benchmark',
-        url: 'https://github.com/example/benchmark',
-        stars: Math.round(repo.stargazers_count * (1.2 + Math.random() * 0.8)), // 120-200% of stars
-        estimatedValue: Math.round(estimatedValue * (1.5 + Math.random() * 1.0)), // 150-250% of value
-      },
-    ]
+    const high = estimatedValue * 2
     
     return {
       estimatedValue: {
@@ -367,9 +315,43 @@ export class RepositoryAnalyzer {
         high: Math.round(high),
         currency: 'USD',
       },
-      valuationMethodology,
-      keyValueDrivers,
-      comparableProjects,
+      valuationMethodology: [
+        'Comparable project analysis',
+        'Revenue multiple estimation',
+        'Cost-based valuation',
+        'Market opportunity sizing',
+      ],
+      keyValueDrivers: [
+        {
+          driver: 'Community Engagement',
+          impact: analysis.community.score > 70 ? 'high' : analysis.community.score > 40 ? 'medium' : 'low',
+          description: `Strong community with ${repo.stargazers_count} stars and ${repo.forks_count} forks`,
+        },
+        {
+          driver: 'Development Activity',
+          impact: analysis.activity.score > 70 ? 'high' : analysis.activity.score > 40 ? 'medium' : 'low',
+          description: `${analysis.activity.commitsLastMonth} commits in last month, ${analysis.activity.contributorCount} contributors`,
+        },
+        {
+          driver: 'Code Health',
+          impact: analysis.codeHealth.score > 70 ? 'high' : analysis.codeHealth.score > 40 ? 'medium' : 'low',
+          description: analysis.codeHealth.daysSinceLastCommit < 30 ? 'Recently active' : 'Limited recent activity',
+        },
+      ],
+      comparableProjects: [
+        {
+          name: 'Similar Open Source Project',
+          url: 'https://github.com/example/similar',
+          stars: Math.round(repo.stargazers_count * 0.8),
+          estimatedValue: Math.round(estimatedValue * 0.9),
+        },
+        {
+          name: 'Industry Standard',
+          url: 'https://github.com/example/industry-standard',
+          stars: Math.round(repo.stargazers_count * 1.5),
+          estimatedValue: Math.round(estimatedValue * 1.8),
+        },
+      ],
     }
   }
   
@@ -491,32 +473,4 @@ export class RepositoryAnalyzer {
       recommendations: dealRecommendations,
     }
   }
-}
-
-// REALISTIC MARKET MULTIPLIERS (based on actual acquisition data)
-const MARKET_MULTIPLIERS: Record<string, number> = {
-  "SaaS": 3.5,           // Average 3.5x revenue multiple
-  "Developer Tools": 2.8, // Developer tools: 2.5-3.0x  
-  "Enterprise Software": 4.2, // Enterprise: 4.0-4.5x
-  "Gaming": 1.5,         // Gaming: lower multiples
-  "AI/ML": 5.0,          // AI/ML: premium 5.0x+ multiples
-  "Infrastructure": 3.2, // Infrastructure software
-  "Open Source": 1.8,    // Pure OSS (lower monetization)
-  "Mobile": 2.1,         // Mobile apps
-  "E-commerce": 2.9,     // E-commerce platforms
-}
-
-// Detect project category from topics and description
-function detectProjectCategory(repo: any): string {
-  const topics = repo.topics || []
-  const description = (repo.description || "").toLowerCase()
-  
-  if (topics.some((t: string) => t.includes("ai") || t.includes("machine-learning"))) return "AI/ML"
-  if (topics.some((t: string) => t.includes("saas") || description.includes("saas"))) return "SaaS"
-  if (topics.some((t: string) => t.includes("enterprise") || description.includes("enterprise"))) return "Enterprise Software"
-  if (topics.some((t: string) => t.includes("game") || description.includes("game"))) return "Gaming"
-  if (topics.some((t: string) => t.includes("dev") || t.includes("tool") || t.includes("cli"))) return "Developer Tools"
-  if (topics.some((t: string) => t.includes("infra") || t.includes("platform"))) return "Infrastructure"
-  
-  return "Open Source" // Default category
 }
