@@ -23,25 +23,25 @@ const YOUR_PROJECTS = [
   },
   {
     id: 'project-2',
-    name: 'your-second-project',
-    githubUrl: 'https://github.com/nyxspecter4/your-second-project',
-    description: 'Your second project description',
+    name: 'project-2-name',
+    githubUrl: 'https://github.com/nyxspecter4/project-2',
+    description: 'Your second project',
     lastAnalyzed: '2024-12-18',
     status: 'active' as const
   },
   {
     id: 'project-3',
-    name: 'your-third-project',
-    githubUrl: 'https://github.com/nyxspecter4/your-third-project',
-    description: 'Your third project description',
+    name: 'project-3-name',
+    githubUrl: 'https://github.com/nyxspecter4/project-3',
+    description: 'Your third project',
     lastAnalyzed: '2024-12-17',
     status: 'dormant' as const
   },
   {
     id: 'project-4',
-    name: 'your-fourth-project',
-    githubUrl: 'https://github.com/nyxspecter4/your-fourth-project',
-    description: 'Your fourth project description',
+    name: 'project-4-name',
+    githubUrl: 'https://github.com/nyxspecter4/project-4',
+    description: 'Your fourth project',
     lastAnalyzed: '2024-12-16',
     status: 'active' as const
   }
