@@ -2,7 +2,7 @@
 export const BRAND = {
   // Core Identity
   NAME: 'KALA.AI',
-  TAGLINE: 'The Intelligent Auction Platform',
+  TAGLINE: 'Intelligent Systems Development',
   
   // Visual Identity
   COLORS: {
@@ -13,15 +13,15 @@ export const BRAND = {
   
   // Messages
   SLOGAN: 'Where time‑backed assets meet AI‑driven market intelligence.',
-  VALUE_PROP: 'Auction with intelligence. Not just faster—smarter.',
-  DESCRIPTION: 'The auction platform that learns from failure. Every restart makes your asset more valuable.',
+  VALUE_PROP: 'Building proprietary technology with measurable value.',
+  DESCRIPTION: 'Intelligent systems development company specializing in time-based valuation and proprietary architecture.',
   
   // Legal
   COPYRIGHT: `© ${new Date().getFullYear()} KALA.AI. All intelligence reserved.`,
   
   // Defaults
-  DEFAULT_TITLE: 'KALA.AI | Intelligent Auction Platform',
-  DEFAULT_DESCRIPTION: 'The auction platform that learns from failure. Every restart makes your asset more valuable.',
+  DEFAULT_TITLE: 'KALA.AI | Intelligent Systems Development',
+  DEFAULT_DESCRIPTION: 'Intelligent systems development company specializing in time-based valuation and proprietary architecture.',
 } as const; // "as const" makes these values fixed
 
 // Helper function to format titles

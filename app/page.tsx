@@ -82,7 +82,7 @@ export default function KALACompanyWebsite() {
             opacity: 0.9,
             fontWeight: '300'
           }}>
-            Intelligent Systems Development
+            {BRAND.TAGLINE}
           </p>
           <p style={{
             fontSize: '1.1rem',
