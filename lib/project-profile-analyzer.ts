@@ -4,6 +4,7 @@ import OpenAI from 'openai'
 import { GitHubClient } from './github-client'
 import { RepositoryAnalyzer, AnalysisMetrics, ValuationInsights, DealRecommendations } from './analyzer'
 import { PitchEngine, generatePitchFromAnalysis } from './pitch-engine'
+import { MarketIntelligenceEngine, MarketIntel } from './intelligence/market-analyzer'
 
 export interface ProjectProfile {
   name: string
@@ -20,6 +21,7 @@ export interface ProjectProfile {
   metrics: AnalysisMetrics
   valuation: ValuationInsights
   recommendations: DealRecommendations
+  marketIntelligence: MarketIntel | null
   githubUrl: string
   createdAt: string
   updatedAt: string
@@ -88,7 +90,15 @@ export class ProjectProfileAnalyzer {
         metrics: analysis.metrics
       })
       
-      // 6. Construct the profile
+      // 6. Generate market intelligence
+      const marketIntel = await MarketIntelligenceEngine.analyzeProject({
+        name: repo,
+        description: repoData.data.description || 'No description',
+        category: this.inferCategory(repoData.data.description || '', primaryLanguage),
+        githubData: repoData.data
+      })
+      
+      // 7. Construct the profile
       const profile: ProjectProfile = {
         name: repo,
         tagline: repoData.data.description,
@@ -104,6 +114,7 @@ export class ProjectProfileAnalyzer {
         metrics: analysis.metrics,
         valuation: analysis.valuation,
         recommendations: analysis.recommendations,
+        marketIntelligence: marketIntel,
         githubUrl: repoData.data.html_url,
         createdAt: repoData.data.created_at,
         updatedAt: repoData.data.updated_at
@@ -542,5 +553,29 @@ Keep the response under 300 words.
       pitches,
       summary
     }
+  }
+
+  private inferCategory(description: string, primaryLanguage: string): string {
+    const desc = description.toLowerCase()
+    const lang = primaryLanguage.toLowerCase()
+    
+    // Simple category inference based on keywords
+    if (desc.includes('game') || desc.includes('gaming') || desc.includes('player') ||
+        desc.includes('battle') || desc.includes('tournament')) {
+      return 'gaming'
+    }
+    
+    if (desc.includes('property') || desc.includes('real estate') || desc.includes('rental') ||
+        desc.includes('management') || desc.includes('housing')) {
+      return 'property-tech'
+    }
+    
+    if (desc.includes('ai') || desc.includes('machine learning') || desc.includes('artificial') ||
+        desc.includes('neural') || desc.includes('deep learning') || lang.includes('python')) {
+      return 'ai-ml'
+    }
+    
+    // Default to ai-ml as per market-analyzer.ts
+    return 'ai-ml'
   }
 }

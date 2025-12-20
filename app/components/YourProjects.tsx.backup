@@ -47,6 +47,21 @@ const YOUR_GITHUB_PROJECTS = [
       confidence: 'Medium',
       methodology: 'Enterprise software multiple (4.2x)'
     }
+  },
+  {
+    name: 'proxy-dealmaker',
+    displayName: 'DealMaker Platform',
+    description: 'AI-powered software acquisition platform',
+    url: 'https://github.com/NyxSpecter4/proxy-dealmaker',
+    language: 'TypeScript/Next.js',
+    status: 'Live',
+    lines: '8K+',
+    category: 'AI/ML',
+    valuation: {
+      range: '$65K - $120K',
+      confidence: 'High',
+      methodology: 'AI/ML premium multiple (5.0x)'
+    }
   }
 ]
 

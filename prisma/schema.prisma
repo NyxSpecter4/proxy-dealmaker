@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Core Platform Entities
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  role          UserRole  @default(BUYER) // BUYER, SELLER, ADMIN
+  createdAt     DateTime  @default(now())
+  
+  // Relationships
+  listedAssets  Asset[]   @relation("Seller")
+  bids          Bid[]
+  sessions      Session[]
+}
+
+model Asset {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  type          AssetType // e.g., SAAS, CODEBASE, BUSINESS
+  status        AssetStatus @default(DRAFT)
+  
+  // KALA.AI Intelligence Fields
+  kalaValuation Float?   // Calculated by KalasTimeVault
+  hoursLogged   Int?     // Total hours from time vault
+  
+  // Relationships
+  sellerId      String
+  seller        User     @relation("Seller", fields: [sellerId], references: [id])
+  auctions      Auction[]
+  dealPackages  DealPackage[]
+  
+  @@index([sellerId])
+  @@index([status])
+}
+
+model Auction {
+  id              String   @id @default(cuid())
+  assetId         String
+  asset           Asset    @relation(fields: [assetId], references: [id])
+  
+  // KALA.AI Engine State
+  status          AuctionStatus @default(SCHEDULED)
+  currentBid      Float?   // Highest bid amount
+  minimumPrice    Float    // From KalasTimeVault * multiplier
+  restartCount    Int      @default(0) // Tracks KalaAuctionEngine restarts
+  restartReason   String?  // Why last restart happened
+  
+  // Timestamps
+  startsAt        DateTime
+  endsAt          DateTime
+  lastRestartAt   DateTime?
+  
+  // Relationships
+  bids            Bid[]
+  dealPackageId   String?
+  dealPackage     DealPackage? @relation(fields: [dealPackageId], references: [id])
+  
+  @@index([assetId])
+  @@index([status, endsAt])
+}
+
+model Bid {
+  id          String   @id @default(cuid())
+  amount      Float
+  status      BidStatus @default(ACTIVE)
+  
+  // KALA.AI Bidder Intelligence
+  bidderType  BidderType // VC, STRATEGIC, etc.
+  riskScore   Int?      // For collusion detection
+  
+  // Relationships
+  auctionId   String
+  auction     Auction   @relation(fields: [auctionId], references: [id])
+  bidderId    String
+  bidder      User      @relation(fields: [bidderId], references: [id])
+  
+  @@index([auctionId])
+  @@unique([auctionId, bidderId]) // One active bid per user per auction
+}
+
+// Complex Deal Structures (Your vision of equity/splits/partnerships)
+model DealPackage {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "VC Growth Partnership"
+  
+  // Structured terms (simplified for schema)
+  components  Json     // Stores Cash, Equity, Royalty terms
+  
+  // Relationships
+  assetId     String
+  asset       Asset    @relation(fields: [assetId], references: [id])
+  auctions    Auction[]
+}
+
+// Enums for type safety
+enum UserRole { BUYER SELLER ADMIN }
+enum AssetType { SAAS CODEBASE BUSINESS INTELLECTUAL_PROPERTY }
+enum AssetStatus { DRAFT LISTED ARCHIVED }
+enum AuctionStatus { SCHEDULED LIVE PAUSED RESTARTING COMPLETED FAILED }
+enum BidStatus { ACTIVE OUTBID WITHDRAWN WINNING }
+enum BidderType { VC STRATEGIC_INVESTOR COMPETITOR INDIVIDUAL }
