@@ -33,6 +33,10 @@ export class KalasTimeVault {
     return totalHours * this.hourlyRate * multiplier;
   }
   
+  calculateMinimumValuationForHours(hours: number, multiplier: number = 2.5): number {
+    return hours * this.hourlyRate * multiplier;
+  }
+  
   generateTimeBackedProposal(): string {
     const valuation = this.calculateMinimumValuation();
     return `
