@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-export class GenesisAIEngine {
+export class MakoThothAIEngine {
   private openai: OpenAI;
 
   constructor() {
@@ -11,10 +11,10 @@ export class GenesisAIEngine {
   }
 
   async analyzeRepository(repo: any) {
-    console.log('🤖 GENESIS AI analyzing:', repo.name);
+    console.log('🤖 MAKO THOTH AI analyzing:', repo.name);
     
     const prompt = `
-    As GENESIS AI, the intelligent software valuation AI, analyze this GitHub repository:
+    As MAKO THOTH AI, the predatory intelligence software valuation AI, analyze this GitHub repository:
     
     REPOSITORY: ${repo.name}
     ${repo.description ? `DESCRIPTION: ${repo.description}` : ''}

@@ -4,117 +4,102 @@ import { motion } from 'framer-motion';
 
 export default function MakoThothLogo() {
   return (
-    <div className="relative w-64 h-64 mx-auto">
-      {/* Outer glow */}
+    <div className="relative w-48 h-48 mx-auto">
+      {/* Main logo container with glow filter */}
       <motion.div
-        className="absolute inset-0 rounded-full"
+        className="relative w-full h-full"
         style={{
-          background: 'radial-gradient(circle, rgba(0, 229, 233, 0.3) 0%, rgba(0, 0, 0, 0) 70%)',
-          filter: 'blur(12px)',
+          filter: 'drop-shadow(0 0 8px #6366f1)',
         }}
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.5, 0.8, 0.5],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
-
-      {/* Main logo container */}
-      <div className="relative w-full h-full">
-        {/* SVG Logo */}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <svg
-          width="256"
-          height="256"
-          viewBox="0 0 256 256"
-          className="absolute inset-0 w-full h-full"
+          width="192"
+          height="192"
+          viewBox="0 0 192 192"
+          className="w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Background circle */}
-          <circle
-            cx="128"
-            cy="128"
-            r="120"
-            fill="none"
-            stroke="rgba(99, 102, 241, 0.1)"
-            strokeWidth="2"
-          />
-
-          {/* Shark fin (Mako) - animated drawing */}
+          {/* Shark Fin (Mako) - Sharp triangular shape */}
           <motion.path
-            d="M 80,80 L 128,40 L 176,80 L 160,160 L 128,200 L 96,160 Z"
+            d="M 48,48 L 96,24 L 144,48 L 120,120 L 96,144 L 72,120 Z"
             fill="none"
             stroke="url(#gradient-primary)"
-            strokeWidth="8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{
-              duration: 2,
-              delay: 0.5,
-              ease: 'easeInOut',
-            }}
-          />
-
-          {/* Eye of Thoth / Nib */}
-          <motion.path
-            d="M 128,100 C 140,90 160,90 172,100 C 180,120 172,140 150,150 C 128,160 106,150 98,130 C 90,110 100,90 120,80"
-            fill="none"
-            stroke="url(#gradient-accent)"
             strokeWidth="6"
             strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
+            strokeLinejoin="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              duration: 2,
-              delay: 1.5,
-              ease: 'easeInOut',
+              duration: 2.5,
+              ease: "easeInOut",
             }}
           />
 
-          {/* Inner pupil */}
+          {/* Eye of Thoth - Concentric circles */}
           <motion.circle
-            cx="128"
-            cy="120"
-            r="12"
+            cx="96"
+            cy="96"
+            r="36"
+            fill="none"
+            stroke="url(#gradient-accent)"
+            strokeWidth="3"
+            strokeDasharray="2,2"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{
+              duration: 2,
+              delay: 0.8,
+              ease: "easeInOut",
+            }}
+          />
+
+          <motion.circle
+            cx="96"
+            cy="96"
+            r="24"
+            fill="none"
+            stroke="url(#gradient-primary)"
+            strokeWidth="2"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{
+              duration: 1.5,
+              delay: 1.2,
+              ease: "easeInOut",
+            }}
+          />
+
+          {/* Pupil - Stylized center */}
+          <motion.circle
+            cx="96"
+            cy="96"
+            r="8"
             fill="url(#gradient-primary)"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{
               duration: 0.8,
-              delay: 2.5,
-              type: 'spring',
+              delay: 2,
+              type: "spring",
               stiffness: 200,
             }}
           />
 
-          {/* Digital scribe lines */}
+          {/* Divine signature line */}
           <motion.path
-            d="M 100,180 L 156,180"
+            d="M 60,150 L 132,150"
             stroke="rgba(139, 92, 246, 0.7)"
-            strokeWidth="3"
-            strokeDasharray="5,5"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{
-              duration: 1.5,
-              delay: 3,
-            }}
-          />
-          <motion.path
-            d="M 110,190 L 146,190"
-            stroke="rgba(139, 92, 246, 0.5)"
             strokeWidth="2"
-            strokeDasharray="3,3"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
+            strokeDasharray="4,4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              duration: 1.5,
-              delay: 3.2,
+              duration: 1.2,
+              delay: 2.5,
+              ease: "easeInOut",
             }}
           />
 
@@ -130,70 +115,34 @@ export default function MakoThothLogo() {
           </defs>
         </svg>
 
-        {/* Floating animation container */}
+        {/* Subtle floating animation */}
         <motion.div
           className="absolute inset-0"
           animate={{
-            y: [0, -10, 0],
+            y: [0, -4, 0],
           }}
           transition={{
-            duration: 4,
+            duration: 3,
             repeat: Infinity,
-            ease: 'easeInOut',
+            ease: "easeInOut",
           }}
-        >
-          {/* Glowing dots */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-[#00E5E9]"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.3, 0.8, 0.3],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: 0.2,
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-2 h-2 rounded-full bg-[#FF6B35]"
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.3, 0.8, 0.3],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: 0.5,
-            }}
-          />
-        </motion.div>
-      </div>
+        />
+      </motion.div>
 
-      {/* Text label */}
-      <div className="absolute -bottom-12 left-0 right-0 text-center">
-        <motion.div
-          className="text-2xl font-black tracking-tighter"
-          style={{
-            background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 3.5, duration: 1 }}
-        >
+      {/* Brand name */}
+      <motion.div
+        className="mt-6 text-center"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 3, duration: 0.8 }}
+      >
+        <div className="text-3xl font-black tracking-tighter bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
           MAKO THOTH
-        </motion.div>
-        <motion.div
-          className="text-sm text-gray-400 mt-1"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 4, duration: 1 }}
-        >
-          Predatory Intelligence
-        </motion.div>
-      </div>
+        </div>
+        <div className="text-sm text-gray-400 mt-1">
+          Predatory Intelligence • Divine Code
+        </div>
+      </motion.div>
     </div>
   );
 }

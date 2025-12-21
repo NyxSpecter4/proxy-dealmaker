@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Zap, Github, ArrowRight, Brain, DollarSign, Star, Users, Globe, Shield, Target, TrendingUp, Cpu, Dice5 } from 'lucide-react';
-import NameGenerator from '../components/NameGenerator';
+import { Sparkles, Zap, Github, ArrowRight, Brain, DollarSign, Star, Users, Globe, Shield, Target, TrendingUp, Cpu } from 'lucide-react';
 import MakoThothLogo from '../components/MakoThothLogo';
 
 const FEATURED_PROJECTS = [
@@ -50,8 +49,6 @@ export default function Home() {
   const [repoUrl, setRepoUrl] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
-  const [generatedNames, setGeneratedNames] = useState<any[]>([]);
-  const [generatingNames, setGeneratingNames] = useState(false);
 
   const handleAnalyze = async () => {
     if (!repoUrl.trim()) return;
@@ -74,27 +71,6 @@ export default function Home() {
       });
     } finally {
       setAnalyzing(false);
-    }
-  };
-
-  const handleGenerateNames = async () => {
-    setGeneratingNames(true);
-    try {
-      const response = await fetch('/api/generate-names', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      const data = await response.json();
-      setGeneratedNames(data.personas || []);
-    } catch (error) {
-      console.error('Name generation failed:', error);
-      setGeneratedNames(INVESTOR_PERSONAS.map(p => ({
-        persona: p.name,
-        names: [`${p.name.split(' ')[0]}AI`, `Quantum${p.name.split(' ')[0]}`, `${p.focus.split(' ')[0]}Labs`],
-        verdict: `"Strong branding potential in the ${p.focus.toLowerCase()} space."`
-      })));
-    } finally {
-      setGeneratingNames(false);
     }
   };
 
@@ -292,55 +268,6 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Mako Thoth Engine */}
-            <div className="glass-heavy rounded-3xl p-8">
-              <div className="flex justify-between items-center mb-8">
-                <div>
-                  <h2 className="text-3xl font-bold gradient-text">The Mako Thoth Engine</h2>
-                  <p className="text-gray-400">7 investor personas generate company names</p>
-                </div>
-                <button
-                  onClick={handleGenerateNames}
-                  disabled={generatingNames}
-                  className="px-6 py-3 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-xl flex items-center gap-2"
-                >
-                  <Dice5 className="w-5 h-5" />
-                  {generatingNames ? 'Generating...' : 'Generate Company Names'}
-                </button>
-              </div>
-
-              {generatedNames.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {generatedNames.slice(0, 7).map((persona, i) => (
-                    <div key={i} className="glass rounded-2xl p-6">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${INVESTOR_PERSONAS[i]?.color || 'from-gray-600 to-gray-800'} flex items-center justify-center`}>
-                          {INVESTOR_PERSONAS[i]?.name.charAt(0)}
-                        </div>
-                        <div>
-                          <div className="font-bold">{persona.persona}</div>
-                          <div className="text-sm text-gray-400">{persona.title}</div>
-                        </div>
-                      </div>
-                      <div className="space-y-2 mb-4">
-                        {persona.names?.map((name: string, idx: number) => (
-                          <div key={idx} className="px-3 py-2 bg-gray-900/50 rounded-lg text-sm">
-                            {name}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="text-sm text-gray-300 italic">"{persona.verdict}"</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* AI Name Generator */}
-            <div className="mt-16">
-              <NameGenerator />
             </div>
           </div>
         </section>

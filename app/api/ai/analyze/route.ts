@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { GenesisAIEngine } from '@/lib/ai-engine';
+import { MakoThothAIEngine } from '@/lib/ai-engine';
 
 export async function POST(request: Request) {
   try {
     const { repos } = await request.json();
-    const engine = new GenesisAIEngine();
+    const engine = new MakoThothAIEngine();
     
     const results: Record<string, any> = {};
     
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       results,
-      engine: 'GENESIS AI GPT-4',
+      engine: 'MAKO THOTH AI GPT-4',
       analyzed_at: new Date().toISOString(),
       repos_analyzed: repos.length
     });
