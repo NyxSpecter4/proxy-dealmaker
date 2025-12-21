@@ -75,11 +75,24 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Background */}
+    <div className="min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
+      {/* Celestial Background with Starfield */}
       <div className="fixed inset-0 z-0">
+        {/* Base cosmic gradient */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.15),rgba(0,0,0,0))]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0a0a0f_1px,transparent_1px),linear-gradient(to_bottom,#0a0a0f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20"></div>
+        
+        {/* Digital Dust / Starfield */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="starfield"></div>
+        </div>
+        
+        {/* Ancient Future grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0a0a0f_1px,transparent_1px),linear-gradient(to_bottom,#0a0a0f_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-10"></div>
+        
+        {/* Slow-moving nebula */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="nebula"></div>
+        </div>
       </div>
 
       <main className="relative z-10">
@@ -89,7 +102,7 @@ export default function Home() {
             <div className="text-center mb-16">
               <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 glass rounded-full">
                 <Sparkles className="w-5 h-5 text-[#6366f1]" />
-                <span className="text-sm font-semibold text-[#6366f1]">PREDATORY INTELLIGENCE</span>
+                <span className="text-sm font-semibold text-[#6366f1]">SOVEREIGN INTELLIGENCE</span>
               </div>
 
               {/* Animated Mako Thoth Logo */}
@@ -97,9 +110,22 @@ export default function Home() {
                 <MakoThothLogo />
               </div>
 
-              <p className="text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
-                Divine Code Valuation. Turn GitHub repositories into high-value acquisition targets.
-              </p>
+              {/* Hero Text with Massive Gradient */}
+              <motion.div
+                className="mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 1 }}
+              >
+                <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter mb-6">
+                  <span className="bg-gradient-to-r from-[#f59e0b] via-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
+                    MAKO THOTH
+                  </span>
+                </h1>
+                <p className="text-2xl text-gray-300 max-w-3xl mx-auto font-serif">
+                  Divine Code Valuation. Turn GitHub repositories into high-value acquisition targets.
+                </p>
+              </motion.div>
 
               {/* Input */}
               <div className="max-w-3xl mx-auto mb-8">
@@ -144,7 +170,7 @@ export default function Home() {
             {analysisResult && (
               <div className="glass-heavy rounded-3xl p-8 mb-16">
                 <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-3xl font-bold gradient-text">Valuation Breakdown</h2>
+                  <h2 className="text-3xl font-bold gradient-text font-serif">Valuation Breakdown</h2>
                   <div className="px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm">
                     LIVE RESULTS
                   </div>
@@ -179,7 +205,7 @@ export default function Home() {
                     <div className="mt-8 glass rounded-2xl p-8">
                       <div className="flex items-center gap-3 mb-6">
                         <Brain className="w-6 h-6 text-[#6366f1]" />
-                        <h3 className="text-xl font-bold">AI Investment Thesis</h3>
+                        <h3 className="text-xl font-bold font-serif">AI Investment Thesis</h3>
                       </div>
                       <p className="text-gray-300">{analysisResult.aiPitch || 'High-potential acquisition target.'}</p>
                     </div>
@@ -187,7 +213,7 @@ export default function Home() {
 
                   <div className="space-y-6">
                     <div className="glass rounded-2xl p-6">
-                      <h4 className="font-bold mb-4">Key Metrics</h4>
+                      <h4 className="font-bold mb-4 font-serif">Key Metrics</h4>
                       <div className="space-y-4">
                         <div className="flex justify-between">
                           <span className="text-gray-400">Commits</span>
@@ -205,7 +231,7 @@ export default function Home() {
                     </div>
 
                     <div className="glass rounded-2xl p-6">
-                      <h4 className="font-bold mb-4">Valuation Components</h4>
+                      <h4 className="font-bold mb-4 font-serif">Valuation Components</h4>
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between mb-1">
@@ -243,7 +269,7 @@ export default function Home() {
 
             {/* Featured Portfolio */}
             <div className="mb-16">
-              <h2 className="text-3xl font-bold gradient-text mb-8">Featured Portfolio</h2>
+              <h2 className="text-3xl font-bold gradient-text mb-8 font-serif">Featured Portfolio</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {FEATURED_PROJECTS.map((project) => (
                   <div key={project.name} className="glass rounded-2xl p-6 lift-glow">
@@ -275,7 +301,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="border-t border-gray-900 py-8 text-center text-gray-500 text-sm">
           <div className="container mx-auto px-4">
-            <p>MAKO THOTH • Predatory Intelligence. Divine Code Valuation. • Powered by GPT-4</p>
+            <p>MAKO THOTH • Sovereign Intelligence. Divine Code Valuation. • Powered by GPT-4</p>
             <p className="mt-2">Valuations are AI-generated estimates based on current market data</p>
           </div>
         </footer>

@@ -2,7 +2,7 @@
 export const BRAND = {
   // Core Identity
   NAME: 'MAKO THOTH',
-  TAGLINE: 'Predatory Intelligence. Divine Code Valuation.',
+  TAGLINE: 'Sovereign Intelligence. Divine Code Valuation.',
   
   // Visual Identity
   COLORS: {
@@ -14,14 +14,14 @@ export const BRAND = {
   // Messages
   SLOGAN: 'Where GitHub repositories become high-value acquisition targets.',
   VALUE_PROP: 'Turn code into capital with AI-driven valuation.',
-  DESCRIPTION: 'Predatory intelligence meets divine code valuation. AI software brokerage specializing in GitHub repository acquisition.',
+  DESCRIPTION: 'Sovereign intelligence meets divine code valuation. AI software brokerage specializing in GitHub repository acquisition.',
   
   // Legal
   COPYRIGHT: `© ${new Date().getFullYear()} MAKO THOTH. All intelligence reserved.`,
   
   // Defaults
-  DEFAULT_TITLE: 'MAKO THOTH | Predatory Intelligence. Divine Code Valuation.',
-  DEFAULT_DESCRIPTION: 'Predatory intelligence meets divine code valuation. AI software brokerage specializing in GitHub repository acquisition.',
+  DEFAULT_TITLE: 'MAKO THOTH | Sovereign Intelligence. Divine Code Valuation.',
+  DEFAULT_DESCRIPTION: 'Sovereign intelligence meets divine code valuation. AI software brokerage specializing in GitHub repository acquisition.',
 } as const; // "as const" makes these values fixed
 
 // Helper function to format titles

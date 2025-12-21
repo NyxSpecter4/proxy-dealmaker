@@ -14,7 +14,7 @@ export class MakoThothAIEngine {
     console.log('🤖 MAKO THOTH AI analyzing:', repo.name);
     
     const prompt = `
-    As MAKO THOTH AI, the predatory intelligence software valuation AI, analyze this GitHub repository:
+    As MAKO THOTH AI, the sovereign intelligence software valuation AI, analyze this GitHub repository:
     
     REPOSITORY: ${repo.name}
     ${repo.description ? `DESCRIPTION: ${repo.description}` : ''}

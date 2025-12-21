@@ -186,7 +186,7 @@ export default function OpenAINameEvaluator() {
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              placeholder="Valur, Aestimo, GitPredator, CodeFlux, etc."
+              placeholder="Valur, Aestimo, CodeSovereign, CodeFlux, etc."
               style={{
                 width: '100%',
                 padding: '1.2rem',
