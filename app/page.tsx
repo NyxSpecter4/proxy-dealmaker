@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Zap, Github, ArrowRight, Brain, DollarSign, Star, Users, Globe, Shield, Target, TrendingUp, Cpu, Dice5 } from 'lucide-react';
 import NameGenerator from '../components/NameGenerator';
+import MakoThothLogo from '../components/MakoThothLogo';
 
 const FEATURED_PROJECTS = [
   {
@@ -110,19 +111,18 @@ export default function Home() {
         <section className="pt-32 pb-24 px-4">
           <div className="container mx-auto max-w-7xl">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-3 mb-8 px-6 py-3 glass rounded-full">
+              <div className="inline-flex items-center gap-3 mb-4 px-6 py-3 glass rounded-full">
                 <Sparkles className="w-5 h-5 text-[#6366f1]" />
-                <span className="text-sm font-semibold text-[#6366f1]">TIER-1 AI SOFTWARE BROKERAGE</span>
+                <span className="text-sm font-semibold text-[#6366f1]">PREDATORY INTELLIGENCE</span>
               </div>
 
-              <h1 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter">
-                <span className="gradient-text">GENESIS</span>
-                <br />
-                <span className="text-white">ENGINE</span>
-              </h1>
+              {/* Animated Mako Thoth Logo */}
+              <div className="mb-8">
+                <MakoThothLogo />
+              </div>
 
               <p className="text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
-                Turn GitHub repositories into high-value acquisition targets
+                Divine Code Valuation. Turn GitHub repositories into high-value acquisition targets.
               </p>
 
               {/* Input */}
@@ -294,11 +294,11 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Genesis Engine */}
+            {/* Mako Thoth Engine */}
             <div className="glass-heavy rounded-3xl p-8">
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h2 className="text-3xl font-bold gradient-text">The Genesis Engine</h2>
+                  <h2 className="text-3xl font-bold gradient-text">The Mako Thoth Engine</h2>
                   <p className="text-gray-400">7 investor personas generate company names</p>
                 </div>
                 <button
@@ -348,7 +348,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="border-t border-gray-900 py-8 text-center text-gray-500 text-sm">
           <div className="container mx-auto px-4">
-            <p>Genesis Engine • Tier-1 AI Software Brokerage • Powered by GPT-4</p>
+            <p>MAKO THOTH • Predatory Intelligence. Divine Code Valuation. • Powered by GPT-4</p>
             <p className="mt-2">Valuations are AI-generated estimates based on current market data</p>
           </div>
         </footer>
