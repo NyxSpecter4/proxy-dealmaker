@@ -99,9 +99,26 @@
   color: #F59E0B !important;
 }
 
-/* High contrast silver */
+/* High contrast colors */
 .text-silver {
-  color: #E5E7EB !important;
+  color: #a1a1aa !important;
+}
+
+.text-gold {
+  color: #f59e0b !important;
+}
+
+.text-white-high {
+  color: #ffffff !important;
+}
+
+/* Border gold */
+.border-gold {
+  border-color: #f59e0b !important;
+}
+
+.border-gold\/30 {
+  border-color: rgba(245, 158, 11, 0.3) !important;
 }
 
 /* Custom scrollbar */
