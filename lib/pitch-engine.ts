@@ -1,5 +1,6 @@
 import { RoxyVoice } from '@/app/lib/roxy/voice-precise'
 import { ProjectProfile } from './project-profile-analyzer'
+import { generateMarketIntelligence, MarketIntelligenceData } from './intelligence/market-intelligence'
 
 export interface PitchData {
   hook: string
@@ -9,6 +10,13 @@ export interface PitchData {
   ask: string
   confidence_level: 'high' | 'medium' | 'low'
   target_audience: 'investors' | 'acquirers' | 'partners'
+}
+
+export interface CompetitiveAnalysis {
+  marketMoat: string
+  competitiveAdvantages: string[]
+  whyThisWins: string[]
+  marketPosition: 'leader' | 'contender' | 'niche' | 'emerging'
 }
 
 export class PitchEngine {
@@ -107,19 +115,34 @@ Target audience: ${pitchData.target_audience.toUpperCase()}
     `
   }
 
-  async deliverPitch(): Promise<{ script: string; audioUrl: string; pitchData: PitchData }> {
+  async deliverPitch(): Promise<{ script: string; audioUrl: string; pitchData: PitchData; marketIntelligence: MarketIntelligenceData }> {
     const script = this.generateScript()
     const pitchData = this.generatePitchData()
+    const marketIntelligence = generateMarketIntelligence(this.analysisData)
     
     try {
       const roxy = new RoxyVoice()
       const audioUrl = await roxy.speak(script)
-      return { script, audioUrl, pitchData }
+      return { script, audioUrl, pitchData, marketIntelligence }
     } catch (error) {
       console.error('Failed to generate audio pitch:', error)
       // Return script without audio if TTS fails
-      return { script, audioUrl: '', pitchData }
+      return { script, audioUrl: '', pitchData, marketIntelligence }
     }
+  }
+
+  generateCompetitiveAnalysis(): CompetitiveAnalysis {
+    const marketIntelligence = generateMarketIntelligence(this.analysisData)
+    return {
+      marketMoat: marketIntelligence.competitiveEdge.marketMoat,
+      competitiveAdvantages: marketIntelligence.competitiveEdge.competitiveAdvantages,
+      whyThisWins: marketIntelligence.competitiveEdge.whyThisWins,
+      marketPosition: marketIntelligence.competitiveEdge.marketPosition
+    }
+  }
+
+  generateMarketIntelligence(): MarketIntelligenceData {
+    return generateMarketIntelligence(this.analysisData)
   }
 
   // Helper methods for generating dynamic content
@@ -266,6 +289,7 @@ export async function generatePitchFromAnalysis(analysisResult: any): Promise<{
   script: string
   audioUrl: string
   pitchData: PitchData
+  marketIntelligence: MarketIntelligenceData
   profile: ProjectProfile
 }> {
   const pitchEngine = new PitchEngine(analysisResult)
@@ -274,4 +298,15 @@ export async function generatePitchFromAnalysis(analysisResult: any): Promise<{
     ...result,
     profile: analysisResult
   }
+}
+
+// Utility function to generate market intelligence data
+export function generateMarketIntelligenceFromAnalysis(analysisResult: any): MarketIntelligenceData {
+  return generateMarketIntelligence(analysisResult)
+}
+
+// Utility function to generate competitive analysis
+export function generateCompetitiveAnalysisFromAnalysis(analysisResult: any): CompetitiveAnalysis {
+  const pitchEngine = new PitchEngine(analysisResult)
+  return pitchEngine.generateCompetitiveAnalysis()
 }
