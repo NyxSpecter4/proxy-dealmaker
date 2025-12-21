@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, Brain, DollarSign, Star, Users, Shield, TrendingUp, Cpu, Lock, Github } from 'lucide-react';
-import MakoThothLogo from '../components/MakoThothLogo';
+import { Sparkles, Brain, DollarSign, Star, Users, Shield, TrendingUp, Cpu, Lock } from 'lucide-react';
 
 interface GitHubRepo {
   id: number;
@@ -103,7 +101,7 @@ export default function Home() {
     const stars = repo.stargazers_count;
     if (stars > 30) return 'bg-green-500/20 text-green-400';
     if (stars > 15) return 'bg-amber-500/20 text-amber-400';
-    return 'bg-gray-500/20 text-gray-400';
+    return 'bg-gray-500/20 text-silver';
   };
 
   const getStatusText = (repo: GitHubRepo) => {
@@ -123,8 +121,13 @@ export default function Home() {
         <section className="pt-20 pb-16 px-4">
           <div className="container mx-auto max-w-7xl">
             {/* Logo with 100px spacing */}
-            <div className="mb-24">
-              <MakoThothLogo />
+            <div className="mb-24 flex flex-col items-center">
+              <h1 className="text-6xl md:text-7xl font-black tracking-tighter text-[#f59e0b]">
+                MAKO THOTH
+              </h1>
+              <div className="text-lg text-silver font-serif mt-2">
+                SOVEREIGN ASSET VAULT • NYXSPECTER4
+              </div>
             </div>
 
             {/* Sovereign Badge */}
@@ -166,8 +169,7 @@ export default function Home() {
                       }`}
                     >
                       <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                          <Github className="w-5 h-5 text-silver" />
+                        <div>
                           <h3 className="text-xl font-bold text-white">{repo.name}</h3>
                         </div>
                         <div className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(repo)}`}>
@@ -186,7 +188,7 @@ export default function Home() {
                             <span className="text-sm text-white">{repo.stargazers_count}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 16 16">
+                            <svg className="w-4 h-4 text-silver" fill="currentColor" viewBox="0 0 16 16">
                               <path fillRule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.25 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"/>
                             </svg>
                             <span className="text-sm text-white">{repo.forks_count}</span>
@@ -274,14 +276,9 @@ export default function Home() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-silver">Repository</span>
-                          <a 
-                            href={selectedRepo.html_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-bold text-[#F59E0B] hover:underline"
-                          >
-                            View on GitHub
-                          </a>
+                          <span className="font-bold text-[#F59E0B]">
+                            {selectedRepo.name}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -361,7 +358,7 @@ export default function Home() {
           <div className="container mx-auto px-4">
             <p className="text-white font-bold">MAKO THOTH • SOVEREIGN INTELLIGENCE • REAL GITHUB DATA</p>
             <p className="mt-2">Private equity dashboard for NyxSpecter4 software assets • Excludes: proxy-dealmaker</p>
-            <p className="mt-1 text-xs text-gray-600">Data fetched directly from GitHub API</p>
+            <p className="mt-1 text-xs text-silver">Data fetched directly from GitHub API</p>
           </div>
         </footer>
       </main>
