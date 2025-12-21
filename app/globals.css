@@ -80,12 +80,28 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Gradient text */
+/* Gradient text - High Contrast */
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(135deg, #FFFFFF, #F59E0B);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+/* Pure White text */
+.text-white-high {
+  color: #FFFFFF !important;
+}
+
+/* Bright Gold */
+.text-gold {
+  color: #F59E0B !important;
+}
+
+/* High contrast silver */
+.text-silver {
+  color: #E5E7EB !important;
 }
 
 /* Custom scrollbar */
@@ -109,9 +125,18 @@
 
 body {
   background: #0a0a0f !important;
-  color: white !important;
+  color: #FFFFFF !important;
   font-family: sans-serif;
   overflow-x: hidden;
+}
+
+/* Ensure all text is high contrast */
+h1, h2, h3, h4, h5, h6 {
+  color: #FFFFFF !important;
+}
+
+p, span, div {
+  color: #E5E7EB !important;
 }
 
 /* Animated grid background */
