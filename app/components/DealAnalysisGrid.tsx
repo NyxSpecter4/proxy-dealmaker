@@ -1,7 +1,79 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MarketIntelligenceData } from '@/lib/intelligence/market-intelligence'
+
+// CountUpValue component for animated number counting
+function CountUpValue({ value, duration = 2000 }: { value: number, duration?: number }) {
+  const [count, setCount] = useState(0)
+  const countRef = useRef(0)
+  const [isVisible, setIsVisible] = useState(false)
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const elementRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (elementRef.current) {
+      observerRef.current.observe(elementRef.current)
+    }
+
+    return () => {
+      if (observerRef.current && elementRef.current) {
+        observerRef.current.unobserve(elementRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isVisible) return
+
+    let startTime: number | null = null
+    const startValue = 0
+    const endValue = value
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp
+      const progress = timestamp - startTime
+      const percentage = Math.min(progress / duration, 1)
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - percentage, 4)
+      const currentValue = Math.floor(startValue + (endValue - startValue) * easeOutQuart)
+      
+      setCount(currentValue)
+      countRef.current = currentValue
+
+      if (percentage < 1) {
+        requestAnimationFrame(animate)
+      }
+    }
+
+    requestAnimationFrame(animate)
+  }, [isVisible, value, duration])
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
+
+  return (
+    <div ref={elementRef}>
+      {formatCurrency(count)}
+    </div>
+  )
+}
 
 interface DealAnalysisGridProps {
   analysisData?: any
@@ -197,22 +269,29 @@ export default function DealAnalysisGrid({
           </div>
         </div>
 
-        {/* Module 2: Market Value */}
-        <div className="bg-gradient-to-br from-gray-900/80 to-black border border-gray-800 rounded-2xl p-6 hover:border-green-800/50 transition group">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold flex items-center gap-2">
-              <span className="text-green-400">💰</span> Market Value
+        {/* Module 2: Market Value - GLOWING VALUATION */}
+        <div className="backdrop-blur-xl bg-gradient-to-br from-black/80 via-emerald-900/10 to-black/80 border border-emerald-500/30 rounded-2xl p-6 hover:border-emerald-400/50 transition-all duration-500 group hover:shadow-[0_0_60px_rgba(16,185,129,0.3)]">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold flex items-center gap-3">
+              <span className="text-emerald-400 text-2xl">💰</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-cyan-300">
+                Market Value
+              </span>
             </h3>
-            <div className="text-sm px-2 py-1 bg-green-900/30 text-green-400 rounded">
+            <div className="text-sm px-3 py-1.5 bg-emerald-900/40 text-emerald-300 rounded-full border border-emerald-500/30">
               ROI: {intelligence.marketValue.roiMultiple}x
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <div className="text-sm text-gray-400 mb-1">Est. Acquisition Value</div>
-              <div className="text-2xl font-bold text-green-400">
-                {formatCurrency(intelligence.marketValue.estimatedAcquisitionValue)}
+              <div className="text-sm text-gray-400 mb-2 tracking-wider">EST. ACQUISITION VALUE</div>
+              <div className="text-4xl font-black text-emerald-300 animate-pulse-slow">
+                <CountUpValue value={intelligence.marketValue.estimatedAcquisitionValue} />
+              </div>
+              <div className="text-xs text-emerald-400/70 mt-2 flex items-center gap-2">
+                <div className="w-full h-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"></div>
+                <span>LIVE VALUATION</span>
               </div>
             </div>
 
