@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { KalaAIEngine } from '@/lib/ai-engine';
+import { GenesisAIEngine } from '@/lib/ai-engine';
 
 export async function POST(request: Request) {
   try {
     const { repos } = await request.json();
-    const engine = new KalaAIEngine();
+    const engine = new GenesisAIEngine();
     
     const results: Record<string, any> = {};
     
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       results,
-      engine: 'KALA.AI GPT-4',
+      engine: 'GENESIS AI GPT-4',
       analyzed_at: new Date().toISOString(),
       repos_analyzed: repos.length
     });

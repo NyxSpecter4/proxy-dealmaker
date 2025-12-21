@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Zap, Github, ArrowRight, Brain, DollarSign, Star, Users, Globe, Shield, Target, TrendingUp, Cpu, Dice5 } from 'lucide-react';
+import NameGenerator from '../components/NameGenerator';
 
 const FEATURED_PROJECTS = [
   {
@@ -175,13 +176,27 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   <div className="lg:col-span-2">
-                    <div className="glass rounded-2xl p-8">
-                      <div className="text-gray-400 mb-2">AI VALUATION</div>
-                      <div className="text-6xl font-black gradient-text mb-4">
-                        {analysisResult.valuation?.formatted || '$56,250'}
-                      </div>
-                      <div className="text-gray-300">
-                        Calculation: (150 commits / 2) × 7.5 complexity × $100/hr
+                    <div className="glass rounded-2xl p-8 relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#6366f1]/10 to-[#8b5cf6]/10"></div>
+                      <div className="relative z-10">
+                        <div className="text-gray-400 mb-2">AI VALUATION</div>
+                        <div className="text-7xl md:text-8xl font-black gradient-text mb-4 animate-glow">
+                          {analysisResult.valuation?.formatted || '$56,250'}
+                        </div>
+                        <div className="text-gray-300">
+                          Calculation: Engineering hours × $125/hr × Strategic premium
+                        </div>
+                        <div className="mt-4 flex items-center gap-4">
+                          <div className="px-3 py-1 bg-[#6366f1]/20 rounded-full text-sm">
+                            <span className="text-[#6366f1]">●</span> Senior Engineering Hours
+                          </div>
+                          <div className="px-3 py-1 bg-[#8b5cf6]/20 rounded-full text-sm">
+                            <span className="text-[#8b5cf6]">●</span> Cutting-Edge Tech Stack
+                          </div>
+                          <div className="px-3 py-1 bg-[#10b981]/20 rounded-full text-sm">
+                            <span className="text-[#10b981]">●</span> Community Multiplier
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -218,20 +233,29 @@ export default function Home() {
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between mb-1">
-                            <span className="text-sm">Code Hours</span>
-                            <span className="text-sm font-bold">75 hrs</span>
+                            <span className="text-sm">Engineering Hours</span>
+                            <span className="text-sm font-bold">120 hrs</span>
                           </div>
                           <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-[#6366f1] w-3/4"></div>
+                            <div className="h-full bg-[#6366f1] w-4/5"></div>
                           </div>
                         </div>
                         <div>
                           <div className="flex justify-between mb-1">
-                            <span className="text-sm">Complexity</span>
-                            <span className="text-sm font-bold">7.5/10</span>
+                            <span className="text-sm">Hourly Rate</span>
+                            <span className="text-sm font-bold">$125/hr</span>
                           </div>
                           <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-[#8b5cf6] w-3/4"></div>
+                            <div className="h-full bg-[#8b5cf6] w-full"></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Strategic Premium</span>
+                            <span className="text-sm font-bold">1.8x</span>
+                          </div>
+                          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-[#10b981] w-3/4"></div>
                           </div>
                         </div>
                       </div>
@@ -312,6 +336,11 @@ export default function Home() {
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* AI Name Generator */}
+            <div className="mt-16">
+              <NameGenerator />
             </div>
           </div>
         </section>

@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: #0a0a0f;
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+}
+
 :root {
   --background: #0a0a0f;
   --foreground: #ffffff;
@@ -102,9 +108,9 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  background: #0a0a0f !important;
+  color: white !important;
+  font-family: sans-serif;
   overflow-x: hidden;
 }
 

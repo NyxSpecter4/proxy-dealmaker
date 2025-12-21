@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-export class KalaAIEngine {
+export class GenesisAIEngine {
   private openai: OpenAI;
 
   constructor() {
@@ -11,24 +11,40 @@ export class KalaAIEngine {
   }
 
   async analyzeRepository(repo: any) {
-    console.log('🤖 KALA.AI analyzing:', repo.name);
+    console.log('🤖 GENESIS AI analyzing:', repo.name);
     
     const prompt = `
-    As KALA.AI, the intelligent software valuation AI, analyze this repository:
+    As GENESIS AI, the intelligent software valuation AI, analyze this GitHub repository:
     
     REPOSITORY: ${repo.name}
     ${repo.description ? `DESCRIPTION: ${repo.description}` : ''}
-    ${repo.language ? `LANGUAGE: ${repo.language}` : ''}
+    ${repo.language ? `PRIMARY LANGUAGE: ${repo.language}` : ''}
+    
+    IMPORTANT: Ignore commit count and GitHub stars. Focus on architectural complexity.
+    
+    Estimate the total Senior Engineering Hours required to build this specific architecture from scratch.
+    Consider:
+    - Codebase size and structure
+    - Technical complexity and architecture
+    - Integration points and dependencies
+    - Testing and documentation requirements
+    - Deployment and operational complexity
     
     Provide a comprehensive analysis including:
-    1. Technical sophistication (1-10)
-    2. Market demand potential (1-10)
-    3. Unique value proposition
-    4. Ideal buyer profile
-    5. Recommended pricing strategy
+    1. Estimated engineering hours (number)
+    2. Technical sophistication score (1-10)
+    3. Market demand potential (1-10)
+    4. Unique value proposition
+    5. Ideal buyer profile
     6. Key selling points
     
-    Format as JSON.
+    Format as JSON with these exact keys:
+    - estimated_hours
+    - technical_sophistication
+    - market_demand_potential
+    - unique_value_proposition
+    - ideal_buyer_profile
+    - key_selling_points
     `;
 
     try {
@@ -41,14 +57,27 @@ export class KalaAIEngine {
 
       const analysis = JSON.parse(response.choices[0].message.content!);
       
-      // Calculate intelligent valuation based on AI analysis
+      // Calculate intelligent valuation based on engineering hours
+      const estimatedHours = analysis.estimated_hours || 100;
+      const hourlyRate = 125; // $125/hr for senior engineer
+      let baseValue = estimatedHours * hourlyRate;
+      
+      // Apply strategic premium for cutting-edge tech
       const techScore = analysis.technical_sophistication || 5;
       const marketScore = analysis.market_demand_potential || 5;
-      const baseValue = (techScore * marketScore * 1000) + 50000;
+      
+      // Premium multiplier based on technical sophistication
+      const techMultiplier = 1 + (techScore / 10); // 1.1x to 2x
+      const marketMultiplier = 1 + (marketScore / 10); // 1.1x to 2x
+      
+      const adjustedValue = baseValue * techMultiplier * marketMultiplier;
       
       return {
         ...analysis,
-        ai_valuation: `$${baseValue.toLocaleString()}+`,
+        ai_valuation: `$${Math.round(adjustedValue).toLocaleString()}+`,
+        base_engineering_value: `$${Math.round(baseValue).toLocaleString()}`,
+        estimated_hours: estimatedHours,
+        hourly_rate: hourlyRate,
         confidence: (techScore + marketScore) / 2,
         generated_at: new Date().toISOString()
       };

@@ -22,10 +22,85 @@ export interface CompetitiveAnalysis {
 export class PitchEngine {
   constructor(private analysisData: ProjectProfile) {}
 
+  /**
+   * Calculate engineering hours based on repository complexity
+   * Uses AI estimation of senior engineering hours required to build from scratch
+   */
+  calculateEngineeringHours(): number {
+    const profile = this.analysisData;
+    const techSummary = profile.technicalSummary;
+    
+    // Base estimation formula using lines of code
+    // Conservative: 50-100 LOC per hour for senior engineer depending on complexity
+    const locPerHour = techSummary.primaryLanguage.includes('TypeScript') ? 80 : 100;
+    let baseHours = techSummary.totalLinesOfCode / locPerHour;
+    
+    // Adjust for project complexity based on stars and contributors
+    // More stars/contributors suggests more sophisticated architecture
+    const complexityMultiplier = 1 + (techSummary.stars / 1000) + (techSummary.contributors / 10);
+    
+    // Apply multiplier with reasonable bounds
+    baseHours = baseHours * Math.min(complexityMultiplier, 3.0);
+    
+    // Minimum 40 hours for any non-trivial project
+    return Math.max(40, Math.round(baseHours));
+  }
+
+  /**
+   * Calculate valuation using new engineering hours formula
+   * (Estimated Hours) * $125/hr = Base Engineering Value
+   * Strategic Premium (1.2x to 2x) for cutting-edge tech stack
+   */
+  calculateValuation(): { low: number; medium: number; high: number; currency: string } {
+    const engineeringHours = this.calculateEngineeringHours();
+    const hourlyRate = 125; // $125/hr for senior engineer
+    let baseValue = engineeringHours * hourlyRate;
+    
+    // Apply strategic premium for cutting-edge tech
+    const techSummary = this.analysisData.technicalSummary;
+    let strategicPremium = 1.0;
+    
+    // Check for cutting-edge technologies based on language and project characteristics
+    const isCuttingEdge =
+      techSummary.primaryLanguage.includes('TypeScript') ||
+      techSummary.primaryLanguage.includes('Rust') ||
+      techSummary.primaryLanguage.includes('Go') ||
+      false;
+    
+    // Additional premium for modern web frameworks (inferred from project)
+    const isModernWeb = techSummary.primaryLanguage.includes('TypeScript') ||
+                       techSummary.primaryLanguage.includes('JavaScript');
+    
+    if (isCuttingEdge) {
+      strategicPremium = 1.8; // 1.8x premium for cutting-edge stack
+    } else if (isModernWeb) {
+      strategicPremium = 1.5; // 1.5x for modern web projects
+    }
+    
+    // Apply community and activity multipliers
+    const metrics = this.analysisData.metrics;
+    const communityMultiplier = 1 + (metrics.community.score / 100) * 0.5; // Up to 1.5x
+    const activityMultiplier = 1 + (metrics.activity.score / 100) * 0.3; // Up to 1.3x
+    
+    const adjustedValue = baseValue * strategicPremium * communityMultiplier * activityMultiplier;
+    
+    // Create valuation ranges
+    const low = Math.round(adjustedValue * 0.7);
+    const medium = Math.round(adjustedValue);
+    const high = Math.round(adjustedValue * 1.5);
+    
+    return {
+      low,
+      medium,
+      high,
+      currency: 'USD'
+    };
+  }
+
   generatePitchData(): PitchData {
     const profile = this.analysisData
     const metrics = profile.metrics
-    const valuation = profile.valuation
+    const valuation = this.calculateValuation()
     
     // Generate hook based on project characteristics
     const hooks = [
@@ -61,8 +136,8 @@ export class PitchEngine {
     
     // Generate ask/recommendation
     const asks = [
-      `a strategic acquisition in the ${this.getValuationRange(valuation.estimatedValue.medium)} range`,
-      `an investment of ${this.getInvestmentAmount(valuation.estimatedValue.medium)} to accelerate growth`,
+      `a strategic acquisition in the ${this.getValuationRange(valuation.medium)} range`,
+      `an investment of ${this.getInvestmentAmount(valuation.medium)} to accelerate growth`,
       `a partnership agreement to leverage the technology while maintaining community engagement`,
       `immediate due diligence with an option to acquire within ${this.getTimeline(metrics.activity.score)} months`
     ]
@@ -81,6 +156,7 @@ export class PitchEngine {
   generateScript(): string {
     const pitchData = this.generatePitchData()
     const { technicalSummary, metrics } = this.analysisData
+    const valuation = this.calculateValuation()
     
     return `
 (Confident, analytical tone) "${pitchData.hook}"
@@ -104,9 +180,11 @@ Our analysis scores the project at:
 
 From an acquisition standpoint, ${pitchData.acquisition_case}
 
-Valuation estimates range from $${this.analysisData.valuation.estimatedValue.low.toLocaleString()} 
-to $${this.analysisData.valuation.estimatedValue.high.toLocaleString()}, 
-with a median of $${this.analysisData.valuation.estimatedValue.medium.toLocaleString()}.
+Valuation estimates range from $${valuation.low.toLocaleString()} 
+to $${valuation.high.toLocaleString()}, 
+with a median of $${valuation.medium.toLocaleString()}.
+
+Calculation: ${this.calculateEngineeringHours()} engineering hours × $125/hr × strategic premium.
 
 I recommend ${pitchData.ask}
 
