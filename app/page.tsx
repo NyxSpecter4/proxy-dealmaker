@@ -18,6 +18,7 @@ export default function Page() {
   const [footer, setFooter] = useState('© 2025 MAKO THOTH • ALL INTELLIGENCE RESERVED')
   const [generatingLogo, setGeneratingLogo] = useState(false)
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
+  const [logoLoading, setLogoLoading] = useState(true)
 
   const generateLogo = async () => {
     setGeneratingLogo(true)
@@ -35,6 +36,14 @@ export default function Page() {
   }
 
   useEffect(() => {
+    // Load saved logo from database
+    fetch('/api/generate-logo').then(r => r.json()).then(data => {
+      if (data.base64) {
+        setLogoUrl(`data:image/png;base64,${data.base64}`)
+      }
+      setLogoLoading(false)
+    }).catch(() => setLogoLoading(false))
+
     // Fetch AI-generated copy
     fetch('/api/generate-copy').then(r => r.json()).then(data => {
       setTagline1(data.tagline1)
@@ -54,7 +63,11 @@ export default function Page() {
   return (
     <div style={{ backgroundColor: '#050505', minHeight: '100vh', color: '#ffffff', fontFamily: 'sans-serif' }}>
       <div style={{ textAlign: 'center', padding: '100px 20px', borderBottom: '2px solid #f59e0b' }}>
-        {logoUrl ? (
+        {logoLoading ? (
+          <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <p style={{ color: '#f59e0b' }}>Loading...</p>
+          </div>
+        ) : logoUrl ? (
           <img src={logoUrl} alt="MAKO THOTH" className="w-48 h-48 mx-auto mb-8 rounded-2xl shadow-[0_0_40px_rgba(245,158,11,1)]" />
         ) : (
           <MakoThothLogo />
