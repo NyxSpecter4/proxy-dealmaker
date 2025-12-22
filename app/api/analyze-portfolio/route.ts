@@ -1,45 +1,39 @@
 import { NextResponse } from 'next/server'
+import OpenAI from 'openai'
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+const REPOS = [
+  { owner: "NyxSpecter4", name: "bountywarz" },
+  { owner: "NyxSpecter4", name: "camel-racing" },
+  { owner: "NyxSpecter4", name: "rws-cc" },
+  { owner: "NyxSpecter4", name: "wanderquest" }
+]
 
 export async function GET() {
-  // Return immediate data - no API calls to fail
-  const projects = [
-    {
-      name: "bountywarz",
-      description: "Real-time multiplayer gaming platform with blockchain-based economy system",
-      category: "Gaming Economy Platform",
-      tech: ["Python", "React", "WebSocket"],
-      valuation: 52500,
-      quality: 85,
-      salesPitch: "Next-generation esports platform where developers compete in algorithmic challenges. Features real-time leaderboards, automated prize distribution, and sophisticated reputation system built for enterprise scalability."
-    },
-    {
-      name: "camel-racing",
-      description: "Physics-based racing game with social features and live betting mechanics",
-      category: "Multiplayer Game",
-      tech: ["Unity", "Node.js", "MongoDB"],
-      valuation: 47500,
-      quality: 78,
-      salesPitch: "Innovative physics-based racing simulator with unique betting mechanics. Combines realistic camel movement with social gaming features. Proven engagement metrics with 10k+ test players."
-    },
-    {
-      name: "rws-cc",
-      description: "Redwood Square Command Center - Enterprise workflow automation platform",
-      category: "Enterprise SaaS",
-      tech: ["Next.js", "TypeScript", "PostgreSQL"],
-      valuation: 65000,
-      quality: 92,
-      salesPitch: "Enterprise-grade workflow automation reducing manual processing time by 70%. Features role-based access control, audit logging, and real-time collaboration tools. Production-ready with full test coverage."
-    },
-    {
-      name: "wanderquest",
-      description: "Interactive branching manga platform with choice-based narratives",
-      category: "Interactive Fiction Platform",
-      tech: ["HTML", "JavaScript", "Canvas API"],
-      valuation: 35000,
-      quality: 80,
-      salesPitch: "Choose-your-own-adventure platform with AI-powered story generation and visual novel aesthetics. Ideal for content creators and educational applications."
-    }
-  ]
-  
-  return NextResponse.json({ projects })
+  try {
+    const projects = await Promise.all(
+      REPOS.map(async ({ owner, name }) => {
+        const repoRes = await fetch(`https://api.github.com/repos/${owner}/${name}`, { headers: { 'User-Agent': 'MAKO-THOTH' } })
+        const repo = await repoRes.json()
+        const langsRes = await fetch(repo.languages_url, { headers: { 'User-Agent': 'MAKO-THOTH' } })
+        const langs = await langsRes.json()
+        
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4",
+          messages: [{ role: "user", content: `Analyze ${name}: ${repo.description}. Stars: ${repo.stargazers_count}. Languages: ${Object.keys(langs).join(', ')}. Return JSON only: {"val":45000,"hrs":360,"desc":"Brief category","pitch":"1 sentence pitch"}. Valuation $30k-$80k.` }],
+          temperature: 0.7,
+          max_tokens: 150
+        })
+        
+        const content = completion.choices[0]?.message?.content || '{"val":45000,"hrs":360,"desc":"Software","pitch":"Premium software asset"}'
+        const ai = JSON.parse(content.replace(/```json|```/g, '').trim())
+        return { name: repo.name, val: ai.val, hrs: ai.hrs, desc: ai.desc, pitch: ai.pitch }
+      })
+    )
+    return NextResponse.json({ projects })
+  } catch (error) {
+    console.error('AI failed:', error)
+    return NextResponse.json({ error: String(error) }, { status: 500 })
+  }
 }
