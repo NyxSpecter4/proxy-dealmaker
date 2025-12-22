@@ -17,8 +17,7 @@ export default function Page() {
   const [tagline2, setTagline2] = useState('')
   const [footer, setFooter] = useState('© 2025 MAKO THOTH')
   const [generatingLogo, setGeneratingLogo] = useState(false)
-  const [logoUrl, setLogoUrl] = useState<string | null>(null)
-  const [logoLoading, setLogoLoading] = useState(true)
+  const [logoUrl, setLogoUrl] = useState('/mako-thoth-logo.png')
 
   const generateLogo = async () => {
     setGeneratingLogo(true)
@@ -36,22 +35,12 @@ export default function Page() {
   }
 
   useEffect(() => {
-    // Load saved logo from database
-    fetch('/api/generate-logo').then(r => r.json()).then(data => {
-      if (data.base64) {
-        setLogoUrl(`data:image/png;base64,${data.base64}`)
-      }
-      setLogoLoading(false)
-    }).catch(() => setLogoLoading(false))
-
     // Fetch AI-generated copy
     fetch('/api/generate-copy').then(r => r.json()).then(data => {
       if (data.tagline1) setTagline1(data.tagline1)
       if (data.tagline2) setTagline2(data.tagline2)
       if (data.footer) setFooter(data.footer)
-    }).catch(() => {
-      // Keep default values if API fails
-    })
+    }).catch(() => {})
     
     // Fetch portfolio
     fetch('/api/analyze-portfolio').then(r => r.json()).then(data => {
@@ -63,15 +52,7 @@ export default function Page() {
   return (
     <div style={{ backgroundColor: '#050505', minHeight: '100vh', color: '#ffffff', fontFamily: 'sans-serif' }}>
       <div style={{ textAlign: 'center', padding: '100px 20px', borderBottom: '2px solid #f59e0b' }}>
-        {logoLoading ? (
-          <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <p style={{ color: '#f59e0b' }}>Loading...</p>
-          </div>
-        ) : logoUrl ? (
-          <img src={logoUrl} alt="MAKO THOTH" className="w-48 h-48 mx-auto mb-8 rounded-2xl shadow-[0_0_40px_rgba(245,158,11,1)]" />
-        ) : (
-          <MakoThothLogo />
-        )}
+        <img src={logoUrl} alt="MAKO THOTH" className="w-48 h-48 mx-auto mb-8 rounded-2xl shadow-[0_0_40px_rgba(245,158,11,1)]" />
         <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>{tagline1}</p>
         {tagline2 && <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>}
         
