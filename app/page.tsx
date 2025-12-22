@@ -13,9 +13,9 @@ type Project = {
 export default function Page() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
-  const [tagline1, setTagline1] = useState('Sovereign Intelligence • Divine Code Valuation')
-  const [tagline2, setTagline2] = useState('PRIVATE ASSET VAULT • OWNER: NYXSPECTER4')
-  const [footer, setFooter] = useState('© 2025 MAKO THOTH • ALL INTELLIGENCE RESERVED')
+  const [tagline1, setTagline1] = useState('Software Portfolio')
+  const [tagline2, setTagline2] = useState('')
+  const [footer, setFooter] = useState('© 2025 MAKO THOTH')
   const [generatingLogo, setGeneratingLogo] = useState(false)
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [logoLoading, setLogoLoading] = useState(true)
@@ -46,9 +46,9 @@ export default function Page() {
 
     // Fetch AI-generated copy
     fetch('/api/generate-copy').then(r => r.json()).then(data => {
-      setTagline1(data.tagline1)
-      setTagline2(data.tagline2)
-      setFooter(data.footer)
+      if (data.tagline1) setTagline1(data.tagline1)
+      if (data.tagline2) setTagline2(data.tagline2)
+      if (data.footer) setFooter(data.footer)
     }).catch(() => {
       // Keep default values if API fails
     })
@@ -73,7 +73,7 @@ export default function Page() {
           <MakoThothLogo />
         )}
         <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>{tagline1}</p>
-        <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>
+        {tagline2 && <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>}
         
         <div style={{ marginTop: '40px' }}>
           <button
