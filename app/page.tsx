@@ -13,17 +13,33 @@ type Project = {
 export default function Page() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
+  const [tagline1, setTagline1] = useState('Sovereign Intelligence • Divine Code Valuation')
+  const [tagline2, setTagline2] = useState('PRIVATE ASSET VAULT • OWNER: NYXSPECTER4')
+  const [footer, setFooter] = useState('© 2025 MAKO THOTH • ALL INTELLIGENCE RESERVED')
   
   useEffect(() => {
-    fetch('/api/analyze-portfolio').then(r => r.json()).then(data => { setProjects(data.projects || []); setLoading(false) }).catch(() => setLoading(false))
+    // Fetch AI-generated copy
+    fetch('/api/generate-copy').then(r => r.json()).then(data => {
+      setTagline1(data.tagline1)
+      setTagline2(data.tagline2)
+      setFooter(data.footer)
+    }).catch(() => {
+      // Keep default values if API fails
+    })
+    
+    // Fetch portfolio
+    fetch('/api/analyze-portfolio').then(r => r.json()).then(data => {
+      setProjects(data.projects || [])
+      setLoading(false)
+    }).catch(() => setLoading(false))
   }, [])
   
   return (
     <div style={{ backgroundColor: '#050505', minHeight: '100vh', color: '#ffffff', fontFamily: 'sans-serif' }}>
       <div style={{ textAlign: 'center', padding: '100px 20px', borderBottom: '2px solid #f59e0b' }}>
         <MakoThothLogo />
-        <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Sovereign Intelligence • Divine Code Valuation</p>
-        <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>PRIVATE ASSET VAULT • OWNER: NYXSPECTER4</p>
+        <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>{tagline1}</p>
+        <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>
       </div>
       
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px' }}>
@@ -45,7 +61,7 @@ export default function Page() {
           </div>
         )}
       </div>
-      <div style={{ padding: '60px', textAlign: 'center', borderTop: '1px solid #333', opacity: 0.5, fontSize: '0.8rem' }}>© 2025 MAKO THOTH • ALL INTELLIGENCE RESERVED</div>
+      <div style={{ padding: '60px', textAlign: 'center', borderTop: '1px solid #333', opacity: 0.5, fontSize: '0.8rem' }}>{footer}</div>
     </div>
   )
 }
