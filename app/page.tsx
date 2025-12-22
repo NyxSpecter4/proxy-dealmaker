@@ -16,6 +16,24 @@ export default function Page() {
   const [tagline1, setTagline1] = useState('Sovereign Intelligence • Divine Code Valuation')
   const [tagline2, setTagline2] = useState('PRIVATE ASSET VAULT • OWNER: NYXSPECTER4')
   const [footer, setFooter] = useState('© 2025 MAKO THOTH • ALL INTELLIGENCE RESERVED')
+  const [generatingLogo, setGeneratingLogo] = useState(false)
+  
+  const generateLogo = async () => {
+    setGeneratingLogo(true)
+    try {
+      const res = await fetch('/api/generate-logo', { method: 'POST' })
+      const data = await res.json()
+      if (data.base64) {
+        // In a real implementation, you would update the logo
+        // For now, we'll just show an alert
+        alert('Logo generated successfully! Check the API response for the image URL.')
+      }
+    } catch (error) {
+      console.error('Logo generation failed:', error)
+    } finally {
+      setGeneratingLogo(false)
+    }
+  }
   
   useEffect(() => {
     // Fetch AI-generated copy
@@ -40,6 +58,38 @@ export default function Page() {
         <MakoThothLogo />
         <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>{tagline1}</p>
         <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>
+        
+        <div style={{ marginTop: '40px' }}>
+          <button
+            onClick={generateLogo}
+            disabled={generatingLogo}
+            style={{
+              background: 'linear-gradient(to right, #f59e0b, #fb923c)',
+              color: 'black',
+              padding: '16px 32px',
+              borderRadius: '12px',
+              fontSize: '1.125rem',
+              fontWeight: '900',
+              boxShadow: '0 0 20px rgba(245, 158, 11, 0.5)',
+              transition: 'all 0.3s',
+              transform: 'scale(1)',
+              cursor: generatingLogo ? 'not-allowed' : 'pointer',
+              opacity: generatingLogo ? 0.7 : 1
+            }}
+            onMouseOver={(e) => {
+              if (!generatingLogo) {
+                e.currentTarget.style.boxShadow = '0 0 40px rgba(245, 158, 11, 1)'
+                e.currentTarget.style.transform = 'scale(1.05)'
+              }
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.5)'
+              e.currentTarget.style.transform = 'scale(1)'
+            }}
+          >
+            {generatingLogo ? '🔥 Creating Logo...' : '⚡ Generate AI Logo'}
+          </button>
+        </div>
       </div>
       
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px' }}>
