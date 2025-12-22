@@ -17,16 +17,15 @@ export default function Page() {
   const [tagline2, setTagline2] = useState('PRIVATE ASSET VAULT • OWNER: NYXSPECTER4')
   const [footer, setFooter] = useState('© 2025 MAKO THOTH • ALL INTELLIGENCE RESERVED')
   const [generatingLogo, setGeneratingLogo] = useState(false)
-  
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
+
   const generateLogo = async () => {
     setGeneratingLogo(true)
     try {
       const res = await fetch('/api/generate-logo', { method: 'POST' })
       const data = await res.json()
       if (data.base64) {
-        // In a real implementation, you would update the logo
-        // For now, we'll just show an alert
-        alert('Logo generated successfully! Check the API response for the image URL.')
+        setLogoUrl(`data:image/png;base64,${data.base64}`)
       }
     } catch (error) {
       console.error('Logo generation failed:', error)
@@ -34,7 +33,7 @@ export default function Page() {
       setGeneratingLogo(false)
     }
   }
-  
+
   useEffect(() => {
     // Fetch AI-generated copy
     fetch('/api/generate-copy').then(r => r.json()).then(data => {
@@ -51,11 +50,15 @@ export default function Page() {
       setLoading(false)
     }).catch(() => setLoading(false))
   }, [])
-  
+
   return (
     <div style={{ backgroundColor: '#050505', minHeight: '100vh', color: '#ffffff', fontFamily: 'sans-serif' }}>
       <div style={{ textAlign: 'center', padding: '100px 20px', borderBottom: '2px solid #f59e0b' }}>
-        <MakoThothLogo />
+        {logoUrl ? (
+          <img src={logoUrl} alt="MAKO THOTH" className="w-48 h-48 mx-auto mb-8 rounded-2xl shadow-[0_0_40px_rgba(245,158,11,1)]" />
+        ) : (
+          <MakoThothLogo />
+        )}
         <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>{tagline1}</p>
         <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>
         

@@ -20,8 +20,8 @@ export async function POST() {
     const buffer = Buffer.from(await imgRes.arrayBuffer())
     const base64 = buffer.toString('base64')
 
-    return NextResponse.json({ base64, url: imageUrl })
+    return NextResponse.json({ base64 })
   } catch (error) {
-    return NextResponse.json({ error: 'Failed' }, { status: 500 })
+    return NextResponse.json({ error: String(error) }, { status: 500 })
   }
 }
