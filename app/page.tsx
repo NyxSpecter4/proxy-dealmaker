@@ -320,7 +320,7 @@ export default function Home() {
                   <p className="text-2xl text-[#f59e0b] font-serif mb-2">
                     Divine Code Valuation
                   </p>
-                  <p className="text-lg text-silver mt-4 mb-6">
+                  <p className="text-lg text-white mt-4 mb-6">
                     Premium Software Portfolio • AI-Valued • Available for Acquisition
                   </p>
                   
@@ -369,7 +369,7 @@ export default function Home() {
                     {project.loading ? (
                       <div className="flex flex-col items-center justify-center h-64">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#f59e0b]"></div>
-                        <p className="mt-4 text-silver">AI Analyzing {project.name}...</p>
+                        <p className="mt-4 text-white">AI Analyzing {project.name}...</p>
                       </div>
                     ) : (
                       <>
@@ -386,16 +386,16 @@ export default function Home() {
                           </div>
                         </div>
                         
-                        <p className="text-silver text-sm mb-4 line-clamp-3">
+                        <p className="text-white text-sm mb-4 line-clamp-3">
                           {project.description}
                         </p>
                         
                         {/* Tech Stack */}
                         <div className="mb-4">
-                          <div className="text-xs text-silver mb-2">TECH STACK</div>
+                          <div className="text-xs text-[#f59e0b] mb-2">TECH STACK</div>
                           <div className="flex flex-wrap gap-2">
                             {project.techStack.map((tech) => (
-                              <span key={tech} className="px-3 py-1 bg-gray-900 rounded-full text-xs text-silver">
+                              <span key={tech} className="px-3 py-1 bg-gray-900 rounded-full text-xs text-white">
                                 {tech}
                               </span>
                             ))}
@@ -406,13 +406,13 @@ export default function Home() {
                         <div className="mb-4 p-4 bg-black/50 rounded-lg border border-gray-800">
                           <div className="flex justify-between items-center">
                             <div>
-                              <div className="text-xs text-silver">AI VALUATION</div>
+                              <div className="text-xs text-[#f59e0b]">AI VALUATION</div>
                               <div className="text-2xl font-black text-[#f59e0b]">
                                 ${project.valuation.toLocaleString()}
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-xs text-silver">{project.engineeringHours} hours</div>
+                              <div className="text-xs text-[#f59e0b]">{project.engineeringHours} hours</div>
                               <div className="text-sm text-white">× $125/hr</div>
                             </div>
                           </div>
@@ -420,7 +420,7 @@ export default function Home() {
                         
                         {/* Sales Pitch */}
                         <div className="mb-4">
-                          <div className="text-xs text-silver mb-1">AI SALES PITCH</div>
+                          <div className="text-xs text-[#f59e0b] mb-1">AI SALES PITCH</div>
                           <p className="text-sm text-white italic line-clamp-3">"{project.salesPitch}"</p>
                         </div>
                         
@@ -442,17 +442,17 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="text-center">
                     <div className="text-5xl font-black text-white mb-2">${totalPortfolioValue.toLocaleString()}</div>
-                    <div className="text-sm text-silver">Total Portfolio Value</div>
+                    <div className="text-sm text-[#f59e0b]">Total Portfolio Value</div>
                   </div>
                   
                   <div className="text-center">
                     <div className="text-5xl font-black text-white mb-2">{averageQualityScore.toFixed(0)}/100</div>
-                    <div className="text-sm text-silver">Average Quality Score</div>
+                    <div className="text-sm text-[#f59e0b]">Average Quality Score</div>
                   </div>
                   
                   <div className="text-center">
                     <div className="text-5xl font-black text-white mb-2">$125/hr</div>
-                    <div className="text-sm text-silver">Elite Market Rate</div>
+                    <div className="text-sm text-[#f59e0b]">Elite Market Rate</div>
                   </div>
                 </div>
                 
@@ -460,7 +460,7 @@ export default function Home() {
                   <p className="text-lg text-white">
                     <span className="text-[#f59e0b] font-bold">Proprietary Algorithm:</span> Engineering Hours × Elite Market Rate
                   </p>
-                  <p className="text-silver mt-2">
+                  <p className="text-white mt-2">
                     Each project is analyzed for code quality, architecture, market potential, and technical sophistication.
                   </p>
                 </div>
@@ -470,7 +470,7 @@ export default function Home() {
             {/* Name Generator Section */}
             <div className="mb-20">
               <h2 className="text-4xl font-bold text-[#F59E0B] mb-4 text-center">Validate the MAKO THOTH Brand</h2>
-              <p className="text-lg text-silver text-center mb-10 max-w-2xl mx-auto">
+              <p className="text-lg text-white text-center mb-10 max-w-2xl mx-auto">
                 7 AI personas evaluate "MAKO THOTH" as a company name. Each provides a score, quote, and alternative suggestion.
               </p>
               
@@ -493,10 +493,10 @@ export default function Home() {
                       </div>
                     </div>
                     
-                    <p className="text-silver text-sm mb-4 italic">"{evalItem.quote}"</p>
+                    <p className="text-white text-sm mb-4 italic">"{evalItem.quote}"</p>
                     
                     <div className="pt-4 border-t border-gray-800">
-                      <div className="text-xs text-silver mb-1">Alternative Suggestion</div>
+                      <div className="text-xs text-[#f59e0b] mb-1">Alternative Suggestion</div>
                       <div className="text-white font-bold">{evalItem.alternative}</div>
                     </div>
                   </div>
@@ -507,11 +507,11 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-gray-900 py-8 text-center text-silver text-sm">
+        <footer className="border-t border-gray-900 py-8 text-center text-white text-sm">
           <div className="container mx-auto px-4">
             <p className="text-white font-bold">MAKO THOTH • SOVEREIGN INTELLIGENCE • DIVINE CODE VALUATION</p>
             <p className="mt-2">Private equity dashboard for elite software assets • AI-powered valuation engine</p>
-            <p className="mt-1 text-xs text-silver">© 2025 MAKO THOTH Sovereign Asset Vault. All rights reserved.</p>
+            <p className="mt-1 text-xs text-white">© 2025 MAKO THOTH Sovereign Asset Vault. All rights reserved.</p>
           </div>
         </footer>
       </main>
