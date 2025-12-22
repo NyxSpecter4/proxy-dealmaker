@@ -5,9 +5,9 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 interface GitHubRepo {
   name: string
-  description: string
+  description: string | null
   stargazers_count: number
-  languages_url: string
+  language: string | null
 }
 
 export async function GET() {
@@ -29,11 +29,30 @@ export async function GET() {
           model: "gpt-4",
           messages: [{
             role: "user",
-            content: `Analyze: ${repo.name}. Description: ${repo.description || 'None'}. Stars: ${repo.stargazers_count}. Return JSON: {"val":45000,"hrs":360,"desc":"Category","pitch":"One sentence"}`
+            content: `Analyze GitHub repo: ${repo.name}
+    
+Description: ${repo.description || 'No description'}
+Stars: ${repo.stargazers_count}
+Language: ${repo.language || 'Unknown'}
+
+ANALYZE:
+- Market demand and competition
+- Technical complexity
+- Customer value proposition
+- Required hours of work
+
+Return ONLY JSON (no markdown):
+{
+  "val": <number between 30000-80000>,
+  "hrs": <realistic hours estimate>,
+  "desc": "<one word category>",
+  "pitch": "<one sentence value prop>"
+}`
           }]
         })
         
-        const ai = JSON.parse(completion.choices[0].message.content?.replace(/```json|```/g, '').trim() || '{}')
+        const content = completion.choices[0].message.content || '{}'
+        const ai = JSON.parse(content.replace(/```json|```/g, '').trim())
         return { name: repo.name, val: ai.val, hrs: ai.hrs, desc: ai.desc, pitch: ai.pitch }
       })
     )
@@ -41,14 +60,6 @@ export async function GET() {
     return NextResponse.json({ projects })
   } catch (error) {
     console.error('API Error:', error)
-    // RETURN FALLBACK DATA INSTEAD OF ERROR
-    return NextResponse.json({
-      projects: [
-        { name: "BountyWarz", val: 52500, hrs: 420, desc: "Gaming Platform", pitch: "Competitive esports ecosystem" },
-        { name: "Camel Racing", val: 47500, hrs: 380, desc: "Physics Simulation", pitch: "Unique racing experience" },
-        { name: "RWS-CC", val: 65000, hrs: 520, desc: "Enterprise SaaS", pitch: "Workflow automation platform" },
-        { name: "WanderQuest", val: 35000, hrs: 280, desc: "Interactive Fiction", pitch: "Story generation platform" }
-      ]
-    })
+    return NextResponse.json({ error: String(error) }, { status: 500 })
   }
 }
