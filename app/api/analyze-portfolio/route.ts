@@ -7,7 +7,6 @@ const openai = new OpenAI({
 
 export async function GET() {
   try {
-    // Get repos from GitHub
     const githubRes = await fetch('https://api.github.com/users/NyxSpecter4/repos?per_page=100&sort=updated')
     const repos = await githubRes.json()
     
@@ -18,33 +17,52 @@ export async function GET() {
       stars: r.stargazers_count,
       forks: r.forks_count,
       size: r.size,
-      topics: r.topics
+      topics: r.topics,
+      updated_at: r.updated_at
     }))
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{
         role: 'user',
-        content: `Analyze this GitHub portfolio and provide REAL market valuations. No fake multipliers.
+        content: `Analyze these GitHub repositories with BRUTAL HONESTY and REALISTIC market assessment:
 
-REPOS: ${JSON.stringify(repoList, null, 2)}
+${JSON.stringify(repoList, null, 2)}
 
-Provide JSON response:
+For EACH repository, provide:
+
+1. CUSTOMER BASE: Who would actually use this? Be specific.
+2. COMPETITION: What existing solutions compete? Name them.
+3. CODE QUALITY: Based on language, stars, activity - honest assessment
+4. CREATIVITY/UNIQUENESS: What makes this different? Or is it generic?
+5. MARKET VALUATION: Realistic dollar range based on actual potential.
+
+NO BULLSHIT. NO MULTIPLIERS. NO HOURLY RATES.
+
+Be honest about weaknesses. If it's a hobby project, say so.
+If market is saturated, say so. If it needs work, say so.
+
+Return JSON:
 {
-  "totalValue": <realistic dollar amount based on tech stack, market demand, acquisition potential>,
-  "techStackRating": "<rating like 'Enterprise-Grade' or 'Emerging Tech'>",
-  "marketPosition": "<position like 'Niche Leader' or 'Growing'>",
-  "acquisitionPotential": "<High/Medium/Low with reason>",
-  "revenuePotential": "<realistic assessment>",
-  "portfolioAnalysis": "<2-3 sentence analysis of real value drivers>"
+  "totalValue": <realistic total>,
+  "projects": [
+    {
+      "name": "repo-name",
+      "value": <realistic dollar amount>,
+      "valueRange": "$X - $Y",
+      "category": "category",
+      "customerBase": "<who would actually pay for this>",
+      "competition": "<existing competitors>",
+      "codeQuality": "<honest assessment>",
+      "creativity": "<what's unique or not>",
+      "marketAnalysis": "<2-3 sentences of REAL market analysis>",
+      "strengths": ["<strength 1>", "<strength 2>"],
+      "weaknesses": ["<weakness 1>", "<weakness 2>"]
+    }
+  ]
 }
 
-Base valuation on:
-- Tech stack market demand
-- Repository activity and quality
-- Potential customer base
-- Real acquisition value
-NO hourly rate math. NO multipliers. REAL market analysis only.`
+Be REALISTIC. Be HONEST. No fluff.`
       }],
       response_format: { type: 'json_object' }
     })

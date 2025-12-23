@@ -48,23 +48,22 @@ export default function Home() {
   }
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
+    <div style={{
+      minHeight: '100vh',
       background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1e 100%)',
       color: '#fff',
       padding: '2rem',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center'
+      alignItems: 'center'
     }}>
       <div style={{ marginBottom: '1rem' }}>
         <Image src={logoUrl} alt="MAKO THOTH" width={120} height={120} style={{ borderRadius: '12px' }} />
       </div>
 
-      <h1 style={{ 
-        fontSize: '3.5rem', 
-        fontWeight: '900', 
+      <h1 style={{
+        fontSize: '3.5rem',
+        fontWeight: '900',
         margin: '0 0 0.5rem',
         background: 'linear-gradient(45deg, #00d4ff, #7b2ff7, #f107a3)',
         WebkitBackgroundClip: 'text',
@@ -73,10 +72,10 @@ export default function Home() {
       }}>
         MAKO THOTH
       </h1>
-      
-      <p style={{ 
-        fontSize: '1.3rem', 
-        color: '#00d4ff', 
+
+      <p style={{
+        fontSize: '1.3rem',
+        color: '#00d4ff',
         margin: '0 0 0.5rem',
         fontWeight: '600',
         textAlign: 'center'
@@ -85,9 +84,9 @@ export default function Home() {
       </p>
 
       {description && (
-        <p style={{ 
-          fontSize: '1rem', 
-          color: '#888', 
+        <p style={{
+          fontSize: '1rem',
+          color: '#888',
           margin: '0 0 1.5rem',
           textAlign: 'center',
           maxWidth: '600px',
@@ -97,7 +96,7 @@ export default function Home() {
         </p>
       )}
 
-      <button 
+      <button
         onClick={generateBranding}
         disabled={generatingBrand}
         style={{
@@ -121,8 +120,8 @@ export default function Home() {
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(0,212,255,0.3)',
         borderRadius: '20px',
-        padding: '2rem 3rem',
-        maxWidth: '800px',
+        padding: '2rem',
+        maxWidth: '900px',
         width: '100%',
         boxShadow: '0 20px 60px rgba(0,212,255,0.2)'
       }}>
@@ -136,7 +135,7 @@ export default function Home() {
           </div>
         ) : (
           <>
-            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <div style={{ fontSize: '3rem', fontWeight: '900', color: '#00d4ff' }}>
                 ${analysis?.totalValue?.toLocaleString() || '---'}
               </div>
@@ -145,61 +144,68 @@ export default function Home() {
               </div>
             </div>
 
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: '1fr 1fr', 
-              gap: '1.5rem',
-              marginTop: '2rem'
-            }}>
-              <div>
-                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Tech Stack Value</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#7b2ff7' }}>
-                  {analysis?.techStackRating || '---'}
-                </div>
-              </div>
-              
-              <div>
-                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Market Position</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#f107a3' }}>
-                  {analysis?.marketPosition || '---'}
-                </div>
-              </div>
-              
-              <div>
-                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Acquisition Potential</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#00d4ff' }}>
-                  {analysis?.acquisitionPotential || '---'}
-                </div>
-              </div>
-              
-              <div>
-                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Revenue Potential</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#00ff88' }}>
-                  {analysis?.revenuePotential || '---'}
-                </div>
-              </div>
-            </div>
-
-            {analysis?.portfolioAnalysis && (
-              <div style={{ 
-                marginTop: '2rem', 
+            {analysis?.projects?.map((project: any, index: number) => (
+              <div key={index} style={{
+                background: 'rgba(0,0,0,0.4)',
+                borderRadius: '16px',
                 padding: '1.5rem',
-                background: 'rgba(0,0,0,0.3)',
-                borderRadius: '12px',
-                fontSize: '0.95rem',
-                lineHeight: '1.6',
-                color: '#ccc'
+                marginBottom: '1.5rem',
+                border: '1px solid rgba(123,47,247,0.3)'
               }}>
-                {analysis.portfolioAnalysis}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <h3 style={{ margin: 0, fontSize: '1.3rem', color: '#00d4ff' }}>{project.name}</h3>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#00ff88' }}>${project.value?.toLocaleString()}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.valueRange}</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#7b2ff7', fontWeight: '600', marginBottom: '0.25rem' }}>CUSTOMERS</div>
+                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.customerBase}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#f107a3', fontWeight: '600', marginBottom: '0.25rem' }}>COMPETITION</div>
+                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.competition}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#00d4ff', fontWeight: '600', marginBottom: '0.25rem' }}>CODE QUALITY</div>
+                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.codeQuality}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#00ff88', fontWeight: '600', marginBottom: '0.25rem' }}>CREATIVITY</div>
+                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.creativity}</div>
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '1rem', lineHeight: '1.5' }}>
+                  {project.marketAnalysis}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#00ff88', fontWeight: '600', marginBottom: '0.5rem' }}>STRENGTHS</div>
+                    {project.strengths?.map((s: string, i: number) => (
+                      <div key={i} style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>+ {s}</div>
+                    ))}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#ff4444', fontWeight: '600', marginBottom: '0.5rem' }}>WEAKNESSES</div>
+                    {project.weaknesses?.map((w: string, i: number) => (
+                      <div key={i} style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>- {w}</div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            )}
+            ))}
           </>
         )}
       </div>
 
-      <div style={{ 
-        marginTop: '2rem', 
-        fontSize: '0.8rem', 
+      <div style={{
+        marginTop: '2rem',
+        fontSize: '0.8rem',
         color: '#555',
         textAlign: 'center'
       }}>
