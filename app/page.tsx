@@ -9,6 +9,7 @@ export default function Home() {
   const [slogan, setSlogan] = useState('AI-Powered Code Acquisition Intelligence')
   const [description, setDescription] = useState('')
   const [generatingBrand, setGeneratingBrand] = useState(false)
+  const [expandedProject, setExpandedProject] = useState<number | null>(null)
 
   useEffect(() => {
     loadAnalysis()
@@ -47,6 +48,12 @@ export default function Home() {
     setGeneratingBrand(false)
   }
 
+  const SectionHeader = ({ title, color }: { title: string; color: string }) => (
+    <div style={{ fontSize: '0.7rem', color, fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
+      {title}
+    </div>
+  )
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -73,56 +80,29 @@ export default function Home() {
         MAKO THOTH
       </h1>
 
-      <p style={{
-        fontSize: '1.3rem',
-        color: '#00d4ff',
-        margin: '0 0 0.5rem',
-        fontWeight: '600',
-        textAlign: 'center'
-      }}>
+      <p style={{ fontSize: '1.3rem', color: '#00d4ff', margin: '0 0 0.5rem', fontWeight: '600', textAlign: 'center' }}>
         {slogan}
       </p>
 
       {description && (
-        <p style={{
-          fontSize: '1rem',
-          color: '#888',
-          margin: '0 0 1.5rem',
-          textAlign: 'center',
-          maxWidth: '600px',
-          lineHeight: '1.5'
-        }}>
+        <p style={{ fontSize: '1rem', color: '#888', margin: '0 0 1.5rem', textAlign: 'center', maxWidth: '600px', lineHeight: '1.5' }}>
           {description}
         </p>
       )}
 
-      <button
-        onClick={generateBranding}
-        disabled={generatingBrand}
-        style={{
-          background: 'linear-gradient(45deg, #7b2ff7, #f107a3)',
-          color: '#fff',
-          border: 'none',
-          padding: '0.75rem 1.5rem',
-          borderRadius: '8px',
-          fontSize: '0.9rem',
-          fontWeight: '600',
-          cursor: generatingBrand ? 'not-allowed' : 'pointer',
-          marginBottom: '2rem',
-          opacity: generatingBrand ? 0.7 : 1
-        }}
-      >
+      <button onClick={generateBranding} disabled={generatingBrand} style={{
+        background: 'linear-gradient(45deg, #7b2ff7, #f107a3)',
+        color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px',
+        fontSize: '0.9rem', fontWeight: '600', cursor: generatingBrand ? 'not-allowed' : 'pointer',
+        marginBottom: '2rem', opacity: generatingBrand ? 0.7 : 1
+      }}>
         {generatingBrand ? 'Generating...' : 'Generate AI Branding'}
       </button>
 
       <div style={{
-        background: 'rgba(255,255,255,0.05)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(0,212,255,0.3)',
-        borderRadius: '20px',
-        padding: '2rem',
-        maxWidth: '900px',
-        width: '100%',
+        background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(0,212,255,0.3)', borderRadius: '20px',
+        padding: '2rem', maxWidth: '1000px', width: '100%',
         boxShadow: '0 20px 60px rgba(0,212,255,0.2)'
       }}>
         {loading ? (
@@ -130,85 +110,170 @@ export default function Home() {
             AI Analyzing GitHub Portfolio...
           </div>
         ) : analysis?.error ? (
-          <div style={{ textAlign: 'center', color: '#ff4444' }}>
-            {analysis.error}
-          </div>
+          <div style={{ textAlign: 'center', color: '#ff4444' }}>{analysis.error}</div>
         ) : (
           <>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
               <div style={{ fontSize: '3rem', fontWeight: '900', color: '#00d4ff' }}>
                 ${analysis?.totalValue?.toLocaleString() || '---'}
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#888', marginTop: '0.5rem' }}>
-                Total Portfolio Valuation
-              </div>
+              <div style={{ fontSize: '0.9rem', color: '#888', marginTop: '0.5rem' }}>Total Portfolio Valuation</div>
+              {analysis?.portfolioSummary && (
+                <div style={{ fontSize: '0.9rem', color: '#aaa', marginTop: '1rem', maxWidth: '600px', margin: '1rem auto 0', lineHeight: '1.5' }}>
+                  {analysis.portfolioSummary}
+                </div>
+              )}
             </div>
 
             {analysis?.projects?.map((project: any, index: number) => (
               <div key={index} style={{
-                background: 'rgba(0,0,0,0.4)',
-                borderRadius: '16px',
-                padding: '1.5rem',
-                marginBottom: '1.5rem',
-                border: '1px solid rgba(123,47,247,0.3)'
+                background: 'rgba(0,0,0,0.4)', borderRadius: '16px', padding: '1.5rem',
+                marginBottom: '1.5rem', border: '1px solid rgba(123,47,247,0.3)'
               }}>
+                {/* Header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.3rem', color: '#00d4ff' }}>{project.name}</h3>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '1.3rem', color: '#00d4ff' }}>{project.name}</h3>
+                    <span style={{ fontSize: '0.75rem', color: '#7b2ff7', background: 'rgba(123,47,247,0.2)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                      {project.category}
+                    </span>
+                  </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#00ff88' }}>${project.value?.toLocaleString()}</div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: '700', color: '#00ff88' }}>${project.value?.toLocaleString()}</div>
                     <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.valueRange}</div>
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#7b2ff7', fontWeight: '600', marginBottom: '0.25rem' }}>CUSTOMERS</div>
-                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.customerBase}</div>
+                {/* Valuation Math */}
+                {project.valuation && (
+                  <div style={{ background: 'rgba(0,212,255,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
+                    <SectionHeader title="VALUATION METHODOLOGY" color="#00d4ff" />
+                    <div style={{ fontSize: '0.9rem', color: '#fff', fontFamily: 'monospace' }}>
+                      {project.valuation.calculation}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#888', marginTop: '0.5rem' }}>
+                      {project.valuation.hoursEstimate} hrs × ${project.valuation.hourlyRate}/hr × {project.valuation.marketMultiplier}x multiplier
+                    </div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#f107a3', fontWeight: '600', marginBottom: '0.25rem' }}>COMPETITION</div>
-                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.competition}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#00d4ff', fontWeight: '600', marginBottom: '0.25rem' }}>CODE QUALITY</div>
-                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.codeQuality}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#00ff88', fontWeight: '600', marginBottom: '0.25rem' }}>CREATIVITY</div>
-                    <div style={{ fontSize: '0.85rem', color: '#ccc' }}>{project.creativity}</div>
-                  </div>
-                </div>
+                )}
 
-                <div style={{ fontSize: '0.85rem', color: '#aaa', marginBottom: '1rem', lineHeight: '1.5' }}>
-                  {project.marketAnalysis}
-                </div>
+                {/* Commercial Potential */}
+                {project.commercial && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <SectionHeader title="COMMERCIAL POTENTIAL" color="#00ff88" />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                      <div>
+                        <div style={{ fontSize: '0.65rem', color: '#666' }}>Current State</div>
+                        <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.commercial.currentState}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.65rem', color: '#666' }}>Target Customers</div>
+                        <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.commercial.targetCustomers}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '0.65rem', color: '#666' }}>Pricing Model</div>
+                        <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.commercial.pricingModel}</div>
+                      </div>
+                    </div>
+                    {project.commercial.revenueStreams?.length > 0 && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <div style={{ fontSize: '0.65rem', color: '#666' }}>Revenue Streams</div>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+                          {project.commercial.revenueStreams.map((s: string, i: number) => (
+                            <span key={i} style={{ fontSize: '0.7rem', background: 'rgba(0,255,136,0.2)', color: '#00ff88', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>{s}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#00ff88', fontWeight: '600', marginBottom: '0.5rem' }}>STRENGTHS</div>
-                    {project.strengths?.map((s: string, i: number) => (
-                      <div key={i} style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>+ {s}</div>
-                    ))}
+                {/* Expand/Collapse for detailed sections */}
+                <button onClick={() => setExpandedProject(expandedProject === index ? null : index)} style={{
+                  background: 'transparent', border: '1px solid rgba(123,47,247,0.5)', color: '#7b2ff7',
+                  padding: '0.5rem 1rem', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', width: '100%'
+                }}>
+                  {expandedProject === index ? 'Hide Details ▲' : 'Show Gaps & Roadmap ▼'}
+                </button>
+
+                {expandedProject === index && (
+                  <div style={{ marginTop: '1rem' }}>
+                    {/* Gaps */}
+                    {project.gaps && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <SectionHeader title="GAPS & IMPROVEMENTS" color="#f107a3" />
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                          <div>
+                            <div style={{ fontSize: '0.65rem', color: '#666' }}>Missing Features</div>
+                            {project.gaps.missingFeatures?.map((f: string, i: number) => (
+                              <div key={i} style={{ fontSize: '0.8rem', color: '#ccc' }}>• {f}</div>
+                            ))}
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '0.65rem', color: '#666' }}>Technical Debt</div>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.gaps.technicalDebt}</div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '0.65rem', color: '#666' }}>Market Position</div>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.gaps.marketPosition}</div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '0.65rem', color: '#666' }}>Competitive Moat</div>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.gaps.competitiveMoat}</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Roadmap */}
+                    {project.roadmap && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <SectionHeader title="10X ROADMAP" color="#7b2ff7" />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <span style={{ background: '#7b2ff7', color: '#fff', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.7rem' }}>1</span>
+                            <span style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.roadmap.step1}</span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <span style={{ background: '#7b2ff7', color: '#fff', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.7rem' }}>2</span>
+                            <span style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.roadmap.step2}</span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <span style={{ background: '#7b2ff7', color: '#fff', padding: '0.1rem 0.4rem', borderRadius: '4px', fontSize: '0.7rem' }}>3</span>
+                            <span style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.roadmap.step3}</span>
+                          </div>
+                        </div>
+                        <div style={{ marginTop: '0.75rem', background: 'rgba(123,47,247,0.1)', padding: '0.75rem', borderRadius: '6px' }}>
+                          <div style={{ fontSize: '0.65rem', color: '#7b2ff7', marginBottom: '0.25rem' }}>GO-TO-MARKET</div>
+                          <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.roadmap.goToMarket}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Strengths/Weaknesses */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <div>
+                        <SectionHeader title="STRENGTHS" color="#00ff88" />
+                        {project.strengths?.map((s: string, i: number) => (
+                          <div key={i} style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>+ {s}</div>
+                        ))}
+                      </div>
+                      <div>
+                        <SectionHeader title="WEAKNESSES" color="#ff4444" />
+                        {project.weaknesses?.map((w: string, i: number) => (
+                          <div key={i} style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>- {w}</div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#ff4444', fontWeight: '600', marginBottom: '0.5rem' }}>WEAKNESSES</div>
-                    {project.weaknesses?.map((w: string, i: number) => (
-                      <div key={i} style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>- {w}</div>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
             ))}
           </>
         )}
       </div>
 
-      <div style={{
-        marginTop: '2rem',
-        fontSize: '0.8rem',
-        color: '#555',
-        textAlign: 'center'
-      }}>
+      <div style={{ marginTop: '2rem', fontSize: '0.8rem', color: '#555', textAlign: 'center' }}>
         2025 MAKO THOTH - AI-Powered Software Acquisitions
       </div>
     </div>
