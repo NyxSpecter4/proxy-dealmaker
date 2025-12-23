@@ -26,7 +26,7 @@ export async function GET() {
     const projects = await Promise.all(
       repos.map(async (repo: GitHubRepo) => {
         const completion = await openai.chat.completions.create({
-          model: "gpt-4",
+          model: "gpt-3.5-turbo",
           messages: [{
             role: "user",
             content: `Analyze GitHub repo: ${repo.name}
