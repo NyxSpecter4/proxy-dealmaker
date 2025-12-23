@@ -1,114 +1,153 @@
 'use client'
 import { useState, useEffect } from 'react'
-import MakoThothLogo from '@/components/MakoThothLogo'
+import Image from 'next/image'
 
-type Project = {
-  name: string
-  val: number
-  hrs: number
-  desc: string
-  pitch: string
-}
-
-export default function Page() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [tagline1, setTagline1] = useState('Software Portfolio')
-  const [tagline2, setTagline2] = useState('')
-  const [footer, setFooter] = useState('© 2025 MAKO THOTH')
-  const [generatingLogo, setGeneratingLogo] = useState(false)
+export default function Home() {
   const [logoUrl, setLogoUrl] = useState('/mako-thoth-logo.png')
-
-  const generateLogo = async () => {
-    setGeneratingLogo(true)
-    try {
-      const res = await fetch('/api/generate-logo', { method: 'POST' })
-      const data = await res.json()
-      if (data.base64) {
-        setLogoUrl(`data:image/png;base64,${data.base64}`)
-      }
-    } catch (error) {
-      console.error('Logo generation failed:', error)
-    } finally {
-      setGeneratingLogo(false)
-    }
-  }
+  const [analysis, setAnalysis] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // Fetch AI-generated copy
-    fetch('/api/generate-copy').then(r => r.json()).then(data => {
-      if (data.tagline1) setTagline1(data.tagline1)
-      if (data.tagline2) setTagline2(data.tagline2)
-      if (data.footer) setFooter(data.footer)
-    }).catch(() => {})
-    
-    // Fetch portfolio
-    fetch('/api/analyze-portfolio').then(r => r.json()).then(data => {
-      setProjects(data.projects || [])
-      setLoading(false)
-    }).catch(() => setLoading(false))
+    loadAnalysis()
   }, [])
 
+  async function loadAnalysis() {
+    setLoading(true)
+    const res = await fetch('/api/analyze-portfolio')
+    const data = await res.json()
+    setAnalysis(data)
+    setLoading(false)
+  }
+
   return (
-    <div style={{ backgroundColor: '#050505', minHeight: '100vh', color: '#ffffff', fontFamily: 'sans-serif' }}>
-      <div style={{ textAlign: 'center', padding: '100px 20px', borderBottom: '2px solid #f59e0b' }}>
-        <img src={logoUrl} alt="MAKO THOTH" className="w-48 h-48 mx-auto mb-8 rounded-2xl shadow-[0_0_40px_rgba(245,158,11,1)]" />
-        <p style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase' }}>{tagline1}</p>
-        {tagline2 && <p style={{ color: '#ffffff', opacity: 0.6, marginTop: '10px' }}>{tagline2}</p>}
-        
-        <div style={{ marginTop: '40px' }}>
-          <button
-            onClick={generateLogo}
-            disabled={generatingLogo}
-            style={{
-              background: 'linear-gradient(to right, #f59e0b, #fb923c)',
-              color: 'black',
-              padding: '16px 32px',
-              borderRadius: '12px',
-              fontSize: '1.125rem',
-              fontWeight: '900',
-              boxShadow: '0 0 20px rgba(245, 158, 11, 0.5)',
-              transition: 'all 0.3s',
-              transform: 'scale(1)',
-              cursor: generatingLogo ? 'not-allowed' : 'pointer',
-              opacity: generatingLogo ? 0.7 : 1
-            }}
-            onMouseOver={(e) => {
-              if (!generatingLogo) {
-                e.currentTarget.style.boxShadow = '0 0 40px rgba(245, 158, 11, 1)'
-                e.currentTarget.style.transform = 'scale(1.05)'
-              }
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.5)'
-              e.currentTarget.style.transform = 'scale(1)'
-            }}
-          >
-            {generatingLogo ? '🔥 Creating Logo...' : '⚡ Generate AI Logo'}
-          </button>
-        </div>
+    <div style={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1e 100%)',
+      color: '#fff',
+      padding: '2rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      {/* LOGO - MUCH SMALLER */}
+      <div style={{ marginBottom: '1rem' }}>
+        <Image src={logoUrl} alt="MAKO THOTH" width={120} height={120} style={{ borderRadius: '12px' }} />
       </div>
+
+      {/* NEW EPIC TAGLINE */}
+      <h1 style={{ 
+        fontSize: '3.5rem', 
+        fontWeight: '900', 
+        margin: '0 0 0.5rem',
+        background: 'linear-gradient(45deg, #00d4ff, #7b2ff7, #f107a3)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        textAlign: 'center'
+      }}>
+        MAKO THOTH
+      </h1>
       
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 20px' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '900', color: '#ffffff', textAlign: 'center', marginBottom: '60px' }}>THE VAULT</h2>
-        {loading ? <p style={{ textAlign: 'center', fontSize: '1.5rem' }}>AI Analyzing Portfolio...</p> : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
-            {projects.map((p) => (
-              <div key={p.name} style={{ backgroundColor: '#000000', border: '2px solid #f59e0b', padding: '40px', borderRadius: '20px', boxShadow: '0 0 20px rgba(245, 158, 11, 0.1)' }}>
-                <h3 style={{ fontSize: '2rem', color: '#f59e0b', marginBottom: '10px' }}>{p.name}</h3>
-                <p style={{ color: '#ffffff', marginBottom: '20px', opacity: 0.8 }}>{p.desc}</p>
-                <div style={{ borderTop: '1px solid #333', paddingTop: '20px', marginBottom: '20px' }}>
-                  <div style={{ fontSize: '0.8rem', color: '#f59e0b', fontWeight: 'bold' }}>AI VALUATION</div>
-                  <div style={{ fontSize: '2.5rem', fontWeight: '900' }}>${p.val?.toLocaleString()}</div>
-                  <div style={{ fontSize: '0.9rem', color: '#666' }}>{p.hrs} Hours @ $125/hr</div>
-                </div>
-                <div style={{ fontStyle: 'italic', fontSize: '0.9rem', color: '#ccc', borderLeft: '3px solid #f59e0b', paddingLeft: '15px' }}>"{p.pitch}"</div>
-              </div>
-            ))}
+      <p style={{ 
+        fontSize: '1.3rem', 
+        color: '#00d4ff', 
+        margin: '0 0 2rem',
+        fontWeight: '600',
+        textAlign: 'center'
+      }}>
+        AI-Powered Code Acquisition Intelligence
+      </p>
+
+      {/* PORTFOLIO VALUATION CARD */}
+      <div style={{
+        background: 'rgba(255,255,255,0.05)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(0,212,255,0.3)',
+        borderRadius: '20px',
+        padding: '2rem 3rem',
+        maxWidth: '800px',
+        width: '100%',
+        boxShadow: '0 20px 60px rgba(0,212,255,0.2)'
+      }}>
+        {loading ? (
+          <div style={{ textAlign: 'center', fontSize: '1.2rem', color: '#00d4ff' }}>
+            🔮 AI Analyzing GitHub Portfolio...
           </div>
+        ) : analysis?.error ? (
+          <div style={{ textAlign: 'center', color: '#ff4444' }}>
+            {analysis.error}
+          </div>
+        ) : (
+          <>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <div style={{ fontSize: '3rem', fontWeight: '900', color: '#00d4ff' }}>
+                ${analysis?.totalValue?.toLocaleString() || '---'}
+              </div>
+              <div style={{ fontSize: '0.9rem', color: '#888', marginTop: '0.5rem' }}>
+                Total Portfolio Valuation
+              </div>
+            </div>
+
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr', 
+              gap: '1.5rem',
+              marginTop: '2rem'
+            }}>
+              <div>
+                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Tech Stack Value</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#7b2ff7' }}>
+                  {analysis?.techStackRating || '---'}
+                </div>
+              </div>
+              
+              <div>
+                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Market Position</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#f107a3' }}>
+                  {analysis?.marketPosition || '---'}
+                </div>
+              </div>
+              
+              <div>
+                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Acquisition Potential</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#00d4ff' }}>
+                  {analysis?.acquisitionPotential || '---'}
+                </div>
+              </div>
+              
+              <div>
+                <div style={{ fontSize: '0.85rem', color: '#888', marginBottom: '0.5rem' }}>Revenue Potential</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#00ff88' }}>
+                  {analysis?.revenuePotential || '---'}
+                </div>
+              </div>
+            </div>
+
+            {analysis?.portfolioAnalysis && (
+              <div style={{ 
+                marginTop: '2rem', 
+                padding: '1.5rem',
+                background: 'rgba(0,0,0,0.3)',
+                borderRadius: '12px',
+                fontSize: '0.95rem',
+                lineHeight: '1.6',
+                color: '#ccc'
+              }}>
+                {analysis.portfolioAnalysis}
+              </div>
+            )}
+          </>
         )}
       </div>
-      <div style={{ padding: '60px', textAlign: 'center', borderTop: '1px solid #333', opacity: 0.5, fontSize: '0.8rem' }}>{footer}</div>
+
+      <div style={{ 
+        marginTop: '2rem', 
+        fontSize: '0.8rem', 
+        color: '#555',
+        textAlign: 'center'
+      }}>
+        © 2025 MAKO THOTH • AI-Powered Software Acquisitions
+      </div>
     </div>
   )
 }

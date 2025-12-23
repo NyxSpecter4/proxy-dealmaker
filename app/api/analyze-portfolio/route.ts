@@ -1,65 +1,58 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
-interface GitHubRepo {
-  name: string
-  description: string | null
-  stargazers_count: number
-  language: string | null
-}
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
 
 export async function GET() {
   try {
-    const reposRes = await fetch('https://api.github.com/users/NyxSpecter4/repos?per_page=100', {
-      headers: { 'User-Agent': 'MAKO-THOTH' }
-    })
+    // Get repos from GitHub
+    const githubRes = await fetch('https://api.github.com/users/NyxSpecter4/repos?per_page=100&sort=updated')
+    const repos = await githubRes.json()
     
-    const allRepos: GitHubRepo[] = await reposRes.json()
-    
-    const repos = allRepos
-      .filter((r: GitHubRepo) => r.name.toLowerCase() !== 'proxy-dealmaker')
-      .sort((a: GitHubRepo, b: GitHubRepo) => b.stargazers_count - a.stargazers_count)
-      .slice(0, 4)
-    
-    const projects = await Promise.all(
-      repos.map(async (repo: GitHubRepo) => {
-        const completion = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo",
-          messages: [{
-            role: "user",
-            content: `Analyze GitHub repo: ${repo.name}
-    
-Description: ${repo.description || 'No description'}
-Stars: ${repo.stargazers_count}
-Language: ${repo.language || 'Unknown'}
+    const repoList = repos.slice(0, 10).map((r: any) => ({
+      name: r.name,
+      description: r.description,
+      language: r.language,
+      stars: r.stargazers_count,
+      forks: r.forks_count,
+      size: r.size,
+      topics: r.topics
+    }))
 
-ANALYZE:
-- Market demand and competition
-- Technical complexity
-- Customer value proposition
-- Required hours of work
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{
+        role: 'user',
+        content: `Analyze this GitHub portfolio and provide REAL market valuations. No fake multipliers.
 
-Return ONLY JSON (no markdown):
+REPOS: ${JSON.stringify(repoList, null, 2)}
+
+Provide JSON response:
 {
-  "val": <number between 30000-80000>,
-  "hrs": <realistic hours estimate>,
-  "desc": "<one word category>",
-  "pitch": "<one sentence value prop>"
-}`
-          }]
-        })
-        
-        const content = completion.choices[0].message.content || '{}'
-        const ai = JSON.parse(content.replace(/```json|```/g, '').trim())
-        return { name: repo.name, val: ai.val, hrs: ai.hrs, desc: ai.desc, pitch: ai.pitch }
-      })
-    )
-    
-    return NextResponse.json({ projects })
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json({ error: String(error) }, { status: 500 })
+  "totalValue": <realistic dollar amount based on tech stack, market demand, acquisition potential>,
+  "techStackRating": "<rating like 'Enterprise-Grade' or 'Emerging Tech'>",
+  "marketPosition": "<position like 'Niche Leader' or 'Growing'>",
+  "acquisitionPotential": "<High/Medium/Low with reason>",
+  "revenuePotential": "<realistic assessment>",
+  "portfolioAnalysis": "<2-3 sentence analysis of real value drivers>"
+}
+
+Base valuation on:
+- Tech stack market demand
+- Repository activity and quality
+- Potential customer base
+- Real acquisition value
+NO hourly rate math. NO multipliers. REAL market analysis only.`
+      }],
+      response_format: { type: 'json_object' }
+    })
+
+    const analysis = JSON.parse(completion.choices[0].message.content || '{}')
+    return NextResponse.json(analysis)
+
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
