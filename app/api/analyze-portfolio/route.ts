@@ -10,7 +10,10 @@ export async function GET() {
     const githubRes = await fetch('https://api.github.com/users/NyxSpecter4/repos?per_page=100&sort=updated')
     const repos = await githubRes.json()
     
-    const repoList = repos.slice(0, 10).map((r: any) => ({
+    const repoList = repos
+      .filter((r: any) => r.name !== 'proxy-dealmaker')
+      .slice(0, 10)
+      .map((r: any) => ({
       name: r.name,
       description: r.description,
       language: r.language,
