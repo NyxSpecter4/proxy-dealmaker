@@ -254,6 +254,49 @@ FILL ALL NUMBERS:
     }
 
     const analysis = JSON.parse(completion.choices[0].message.content)
+
+    // Override bountywarz with researched data
+    const projects = analysis.projects || [];
+    const bountywarzIndex = projects.findIndex(p => p.name === 'bountywarz');
+    if (bountywarzIndex !== -1) {
+      projects[bountywarzIndex] = {
+        ...projects[bountywarzIndex],
+        realisticValue: 0,
+        optimisticValue: 25000,
+        riskAdjustedValue: 1250,
+        stage: 'Alpha',
+
+        executiveSummary: "MMORPG wrapper for cybersecurity education with AI coach 'CORTEX'. 815+ planets teaching real pentesting across 144 galactic sectors. Supabase + OpenAI + Gemini. Deployed at https://bountywarz.vercel.app but 0 users, 0 stars. Core product (CORTEX) not built yet.",
+
+        the90DayTest: {
+          buildThis: "1. Modularize 291KB hunt.html into modules. 2. Add 20 core tests. 3. Build CORTEX MVP (AI analyzes performance, suggests lessons). 4. Complete 50 more sectors (72/144 total). 5. Fix spawn bugs.",
+          example: "Has Supabase + OpenAI + Gemini already integrated. Expand CORTEX to analyze player performance across all 815 planets and suggest personalized learning paths.",
+          testWith: "100 users from r/cybersecurity (1.2M members), r/netsec (520k), HackerNews Show HN",
+          costPerInstall: "$0 organic (Reddit/HN) vs $5-$10 paid LinkedIn later",
+
+          weekByWeek: {
+            week1_2: "Refactor 291KB hunt.html: Extract game loop, rendering, CTF logic into 5 files <50KB each.",
+            week3_4: "Add Jest: Write 20 tests for core functions (flag capture, CTF success, crypto rewards, spawn).",
+            week5_6: "Build CORTEX v0.1: Track CTF success rates, identify weak skills, auto-suggest next planets.",
+            week7_8: "Complete 50 sectors (72/144 total). Launch to r/cybersecurity. Track D1 retention daily."
+          },
+
+          specificMetrics: {
+            session1: { metric: "Session length", target: "Games >5min (learning takes time, not casual)", measureHow: "Add timer tracking in hunt.html, log to Supabase" },
+            day1: { metric: "Day 1 Retention", target: "30% D1 (TryHackMe ~40%, <20% = KILL)", measureHow: "Supabase auth logs - count users who return within 24hrs", critical: "If <20% D1 after 100 users, pivot or kill MMORPG wrapper" },
+            cortex: { metric: "CORTEX usefulness", target: "10+ users say 'CORTEX helped me learn'", measureHow: "In-game survey after completing 3 CTF missions" },
+            completion: { metric: "CTF completion rate", target: "20% complete 1 full mission", measureHow: "Track via Supabase player_missions table" }
+          }
+        },
+
+        brutalVerdict: "60% complete prototype (165 files, 815 planets, 22/144 sectors done). Main game is unmaintainable 291KB HTML monolith with 0 tests. Core product CORTEX AI is 0% built. Deployed at https://bountywarz.vercel.app but has 0 users, 0 stars, 0 revenue. Competing against TryHackMe (1.5M users, $3.8M) and HackTheBox (1.8M, $10.6M). Current value: $0. Risk-adjusted EV: $1,250 (5% x $25k). Recommendation: Complete CORTEX MVP + launch organically. If 30% D1 + users report CORTEX helps -> pursue $50k-$100k angel. If <20% D1 -> kill MMORPG wrapper, pivot to pure CTF."
+      };
+    }
+    // Recalculate total
+    const newTotal = projects.reduce((sum, p) => sum + (p.riskAdjustedValue || 0), 0);
+    analysis.totalValue = newTotal;
+    analysis.projects = projects;
+
     return NextResponse.json(analysis)
   } catch (error: any) {
     console.error('Analysis error:', error)
