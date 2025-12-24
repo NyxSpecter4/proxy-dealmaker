@@ -32,62 +32,29 @@ export async function GET() {
       model: 'gpt-3.5-turbo',
       messages: [{
         role: 'user',
-        content: `You are a software acquisition analyst. Analyze these GitHub repositories with detailed valuation:
+        content: `You are a brutal, honest startup advisor analyzing GitHub repos as PRODUCTS.
 
 ${JSON.stringify(repoList, null, 2)}
 
-For EACH repository provide:
+For each repo, return JSON with NO hours/rate/multiplier calculations:
 
-1. VALUATION: Estimate hours invested, base value (hours × $50-150/hr), market multiplier (0.5x-5x), show math.
-
-2. COMMERCIAL: Current state, revenue streams (SaaS/licensing/API), target customers, pricing model.
-
-3. GAPS: Missing features, technical improvements, market positioning, competitive moats to build.
-
-4. ROADMAP: 3 steps to 10x value, go-to-market strategy.
-
-Return JSON:
 {
-  "totalValue": <sum>,
-  "portfolioSummary": "<overall assessment>",
-  "projects": [
-    {
-      "name": "repo-name",
-      "value": <number>,
-      "valueRange": "$X - $Y",
-      "category": "SaaS|Tool|Library|Game",
-      "valuation": {
-        "hoursEstimate": <number>,
-        "hourlyRate": <50-150>,
-        "baseValue": <number>,
-        "marketMultiplier": <0.5-5>,
-        "calculation": "Base ($X) × Market (Ym) = $Z"
-      },
-      "commercial": {
-        "currentState": "<what works vs incomplete>",
-        "revenueStreams": ["stream1", "stream2"],
-        "targetCustomers": "<specific segments>",
-        "pricingModel": "<how much to charge>"
-      },
-      "gaps": {
-        "missingFeatures": ["feature1", "feature2"],
-        "technicalDebt": "<improvements>",
-        "marketPosition": "<strategy>",
-        "competitiveMoat": "<advantages>"
-      },
-      "roadmap": {
-        "step1": "<action>",
-        "step2": "<action>",
-        "step3": "<action>",
-        "goToMarket": "<strategy>"
-      },
-      "strengths": ["str1", "str2"],
-      "weaknesses": ["weak1", "weak2"]
-    }
-  ]
+  "totalValue": 25000,
+  "portfolioSummary": "brief honest overview",
+  "projects": [{
+    "name": "repo-name",
+    "value": 15000,
+    "description": "what it actually does",
+    "marketReality": "who would pay and how much realistically",
+    "strengths": ["what's good"],
+    "weaknesses": ["what sucks"],
+    "competition": "who else does this",
+    "pivotIdea": "better product idea if needed",
+    "nextSteps": ["action 1", "action 2", "action 3"]
+  }]
 }
 
-Be realistic. No fluff.`
+Base values on MARKET POTENTIAL not code hours. Be realistic.`
       }],
       response_format: { type: 'json_object' }
     })
