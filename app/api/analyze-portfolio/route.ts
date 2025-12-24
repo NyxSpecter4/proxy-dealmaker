@@ -32,82 +32,104 @@ export async function GET() {
       model: 'gpt-3.5-turbo',
       messages: [{
         role: 'user',
-        content: `You are a startup analyst using industry-standard valuation methods (Scorecard/Berkus). Be brutally honest.
+        content: `You are a startup advisor. Give brutally honest valuations BUT also actionable pivot strategies.
 
 ${JSON.stringify(repoList, null, 2)}
 
 VALUATION REALITY:
-- 90% of games fail commercially
-- No traction = speculative code asset only ($100-$1000)
-- Early-stage projects valued on risk factors, NOT potential
-- ARR is the ONLY reliable metric for SaaS
-
-SCORECARD METHOD - Rate each project:
-- Quality of idea/team: Low/Medium/High
-- Prototype/MVP status: None/Basic/Production
-- Market size: Niche/Medium/Large
-- Product-market fit: None/Some/Proven
-- Traction (users/revenue): None/Early/Growing
-- Defensibility: None/Weak/Strong
+- Pre-traction = $0 realistic value
+- 90% of games fail, 75% of SaaS fail
+- Default to $0 until metrics prove otherwise
 
 Return JSON:
 {
-  "totalValue": 2000,
-  "portfolioSummary": "brutally honest overview - which to pursue, which to kill",
+  "totalValue": 0,
+  "portfolioSummary": "Which project to focus on and why - be specific",
+  "topPick": "name of best project to validate",
   "projects": [{
     "name": "repo-name",
-    "realisticValue": 300,
-    "optimisticValue": 5000,
-    "description": "what it does",
+    "realisticValue": 0,
+    "optimisticValue": 10000,
+    "stage": "Concept/Pre-MVP/MVP/Traction",
 
-    "stage": "Concept/Pre-MVP/MVP/Production",
-    "valuationGaps": [
-      "No measurable traction (DAU/MAU/ARR)",
-      "No paying customers",
-      "Easily replicable - no moat"
-    ],
+    "validationFramework": {
+      "shouldValidate": true,
+      "reasoning": "Has unique angle worth testing / Saturated market, no moat",
 
-    "industryReality": {
-      "sector": "Gaming/SaaS/Tool/Consumer",
-      "failureRate": "90% of games fail / 75% of SaaS fail",
-      "keyMetric": "DAU for games / ARR for SaaS",
-      "currentMetric": "0 - no evidence of users or revenue",
-      "competition": "who does this better and why you'll lose"
-    },
+      "the90DayTest": {
+        "buildThis": "NOT full product - build vertical slice testing core loop",
+        "example": "5-min bug blasting shooter (not full MMORPG)",
+        "metric": "100 people try it, measure engagement >5min",
+        "successCriteria": "If 30%+ want more -> validate. If <10% -> pivot or kill.",
+        "cost": "2-4 weeks part-time work"
+      },
 
-    "scorecardAssessment": {
-      "idea": "Low/Medium/High - brief reason",
-      "team": "Low - solo dev",
-      "mvp": "Basic/None/Production",
-      "marketFit": "None - no user validation",
-      "traction": "None - no DAU/MAU/ARR data",
-      "moat": "None - easily copied"
-    },
-
-    "pathToValue": {
-      "isViable": false,
-      "criticalMetrics": [
-        "Get first 100 active users",
-        "Prove 30-day retention >20%",
-        "Generate first $1 revenue"
+      "strategicPivots": [
+        {
+          "scenario": "If users love X but ignore Y",
+          "pivot": "Drop Y, double down on X",
+          "reasoning": "Follow the engagement, not the original plan",
+          "newMarket": "Bigger market, lower barrier"
+        }
       ],
-      "timeToProof": "3-6 months to basic validation",
-      "probabilityOfSuccess": "10% (industry average)"
+
+      "intelligentShelving": {
+        "if": "Validation fails after 90-day test",
+        "then": "Don't abandon - shelve strategically",
+        "salvageValue": [
+          "Reusable code components",
+          "Portfolio piece",
+          "Learning experience"
+        ]
+      }
     },
 
-    "nextSteps": [
-      "Step 1 with specific metric",
-      "Step 2 with validation criteria",
-      "Step 3 with success threshold"
+    "industryBenchmarks": {
+      "sector": "Gaming/SaaS/Tool",
+      "failureRate": "90% fail commercially",
+      "successMetric": "20-27% retention for games / $5k MRR for SaaS",
+      "dominantModel": "Free-to-play / Freemium / B2B"
+    },
+
+    "microMVP": {
+      "whatToBuild": "Smallest thing that tests riskiest assumption",
+      "example": "Single level / One workflow / One customer type",
+      "timeline": "2-4 weeks max",
+      "userTarget": "100 testers from Reddit/Discord",
+      "criticalQuestion": "Is the CORE MECHANIC fun/useful?"
+    },
+
+    "decisionFramework": {
+      "passion": "Love this idea or just want money?",
+      "resources": "Can afford 3-6 months with 90% failure risk?",
+      "skillDevelopment": "Will this improve portfolio regardless?",
+      "recommendation": "Validate / Pivot / Shelve"
+    },
+
+    "immediateActions": [
+      {
+        "week1": "Build absolute minimum testable core",
+        "week2_3": "Get 100 people to try it",
+        "week4": "Measure engagement metrics",
+        "decision": "If >30% engaged -> continue. If <10% -> pivot."
+      }
     ],
 
-    "brutalTruth": "One sentence on whether to pursue or abandon"
+    "pivotOpportunities": [
+      "Specific pivot based on what could work",
+      "Alternative market or format"
+    ],
+
+    "brutalVerdict": "Worth $0 now. Has X% chance. Recommend: Validate/Pivot/Shelve because [reason]."
   }]
 }
 
-CRITICAL: Default to LOW valuations. Evidence required to justify higher.
-Focus on 1-2 projects with best fundamentals.
-Tell them which projects to kill immediately.`
+CRITICAL:
+1. Give SPECIFIC micro-MVP to build (not full product)
+2. Include pivot strategies based on test results
+3. Give 90-day validation timeline with metrics
+4. Tell them WHEN to pivot vs kill
+5. Focus on ONE project with best validation potential`
       }],
       response_format: { type: 'json_object' }
     })
