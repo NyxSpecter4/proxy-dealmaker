@@ -47,21 +47,17 @@ export default function Home() {
     setGeneratingBrand(false)
   }
 
-  const SectionHeader = ({ title, color }: { title: string; color: string }) => (
-    <div style={{ fontSize: '0.8rem', color, fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-      {title}
-    </div>
-  )
-
-  const SubSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
-      <div style={{ fontSize: '0.75rem', color: '#00d4ff', fontWeight: '700', marginBottom: '0.75rem' }}>{title}</div>
+  const Section = ({ title, children, color = '#00d4ff' }: { title: string; children: React.ReactNode; color?: string }) => (
+    <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1rem' }}>
+      <div style={{ fontSize: '0.9rem', color, fontWeight: '700', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {title}
+      </div>
       {children}
     </div>
   )
 
-  const InfoRow = ({ label, value, color = '#ccc' }: { label: string; value: string; color?: string }) => (
-    <div style={{ fontSize: '0.85rem', marginBottom: '0.3rem' }}>
+  const InfoRow = ({ label, value, color = '#ccc' }: { label: string; value: any; color?: string }) => (
+    <div style={{ fontSize: '0.85rem', marginBottom: '0.4rem' }}>
       <span style={{ color: '#888' }}>{label}:</span> <span style={{ color }}>{value}</span>
     </div>
   )
@@ -165,128 +161,135 @@ export default function Home() {
 
                 {/* Values Row */}
                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-                  <div style={{ background: 'rgba(255,68,68,0.15)', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,68,68,0.3)' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#ff4444', fontWeight: '700' }}>CURRENT</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#ff4444' }}>${project.realisticValue?.toLocaleString() || '0'}</div>
+                  <div style={{ background: 'rgba(255,68,68,0.15)', padding: '0.5rem 1rem', borderRadius: '8px' }}>
+                    <span style={{ color: '#888', fontSize: '0.75rem' }}>Current: </span>
+                    <span style={{ color: '#ff4444', fontWeight: '700' }}>${project.realisticValue?.toLocaleString() || '0'}</span>
                   </div>
-                  <div style={{ background: 'rgba(0,255,136,0.15)', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid rgba(0,255,136,0.3)' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#00ff88', fontWeight: '700' }}>POTENTIAL</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#00ff88' }}>${project.optimisticValue?.toLocaleString() || '0'}</div>
+                  <div style={{ background: 'rgba(0,255,136,0.15)', padding: '0.5rem 1rem', borderRadius: '8px' }}>
+                    <span style={{ color: '#888', fontSize: '0.75rem' }}>Potential: </span>
+                    <span style={{ color: '#00ff88', fontWeight: '700' }}>${project.optimisticValue?.toLocaleString() || '0'}</span>
                   </div>
-                  <div style={{ background: 'rgba(123,47,247,0.15)', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid rgba(123,47,247,0.3)' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#7b2ff7', fontWeight: '700' }}>STAGE</div>
-                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#7b2ff7' }}>{project.stage}</div>
+                  <div style={{ background: 'rgba(123,47,247,0.15)', padding: '0.5rem 1rem', borderRadius: '8px' }}>
+                    <span style={{ color: '#888', fontSize: '0.75rem' }}>Stage: </span>
+                    <span style={{ color: '#7b2ff7', fontWeight: '700' }}>{project.stage}</span>
                   </div>
                 </div>
 
-                {/* Validation Framework */}
-                <div style={{
-                  background: project.validationFramework?.shouldValidate ? 'rgba(0,255,136,0.1)' : 'rgba(255,68,68,0.1)',
-                  border: project.validationFramework?.shouldValidate ? '1px solid rgba(0,255,136,0.3)' : '1px solid rgba(255,68,68,0.3)',
-                  borderRadius: '12px',
-                  padding: '1.25rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  <div style={{ fontSize: '1rem', fontWeight: '700', color: project.validationFramework?.shouldValidate ? '#00ff88' : '#ff4444', marginBottom: '0.5rem' }}>
-                    {project.validationFramework?.shouldValidate ? '✅ Worth Validating' : '❌ Not Worth Validating'}
-                  </div>
-                  <div style={{ fontSize: '0.9rem', color: '#ccc', marginBottom: '1rem' }}>
-                    {project.validationFramework?.reasoning}
-                  </div>
+                {/* The 90-Day Test */}
+                {project.the90DayTest && (
+                  <Section title="📋 THE 90-DAY VALIDATION TEST">
+                    {/* Build Plan */}
+                    <div style={{ marginBottom: '1rem' }}>
+                      <InfoRow label="Build" value={project.the90DayTest.buildThis} color="#fff" />
+                      <InfoRow label="Example" value={project.the90DayTest.example} />
+                      <InfoRow label="Test With" value={project.the90DayTest.testWith} color="#00d4ff" />
+                      <InfoRow label="Cost" value={project.the90DayTest.costPerInstall} color="#00ff88" />
+                    </div>
 
-                  {project.validationFramework?.shouldValidate && (
-                    <>
-                      {/* 90-Day Test */}
-                      <SubSection title="📋 THE 90-DAY TEST">
-                        <InfoRow label="Build" value={project.validationFramework?.the90DayTest?.buildThis} color="#fff" />
-                        <InfoRow label="Example" value={project.validationFramework?.the90DayTest?.example} />
-                        <InfoRow label="Metric" value={project.validationFramework?.the90DayTest?.metric} color="#00d4ff" />
-                        <InfoRow label="Success" value={project.validationFramework?.the90DayTest?.successCriteria} color="#00ff88" />
-                        <InfoRow label="Time Cost" value={project.validationFramework?.the90DayTest?.cost} />
-                      </SubSection>
+                    {/* Week-by-Week Timeline */}
+                    {project.the90DayTest.timeline && (
+                      <div style={{ background: 'rgba(123,47,247,0.1)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                        <div style={{ fontSize: '0.8rem', color: '#7b2ff7', fontWeight: '700', marginBottom: '0.75rem' }}>📅 8-WEEK TIMELINE</div>
+                        {Object.entries(project.the90DayTest.timeline).map(([key, value]) => (
+                          <div key={key} style={{ fontSize: '0.85rem', marginBottom: '0.3rem' }}>
+                            <span style={{ color: '#7b2ff7', fontWeight: '600' }}>{key.replace(/_/g, '-')}:</span>{' '}
+                            <span style={{ color: '#ccc' }}>{value as string}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-                      {/* Micro-MVP */}
-                      <SubSection title="🔬 MICRO-MVP PLAN">
-                        <InfoRow label="What to Build" value={project.microMVP?.whatToBuild} color="#fff" />
-                        <InfoRow label="Example" value={project.microMVP?.example} />
-                        <InfoRow label="Timeline" value={project.microMVP?.timeline} color="#00d4ff" />
-                        <InfoRow label="Test With" value={project.microMVP?.userTarget} />
-                        <InfoRow label="Key Question" value={project.microMVP?.criticalQuestion} color="#f107a3" />
-                      </SubSection>
-
-                      {/* Immediate Actions */}
-                      {project.immediateActions?.length > 0 && (
-                        <SubSection title="📅 WEEK-BY-WEEK PLAN">
-                          {project.immediateActions.map((action: any, i: number) => (
-                            <div key={i} style={{ marginBottom: '0.5rem' }}>
-                              {Object.entries(action).map(([week, task]) => (
-                                <InfoRow key={week} label={week.replace('_', '-')} value={task as string} />
-                              ))}
+                    {/* Specific Metrics */}
+                    {project.the90DayTest.specificMetrics && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <div style={{ fontSize: '0.8rem', color: '#f107a3', fontWeight: '700', marginBottom: '0.75rem' }}>🎯 KEY METRICS TO TRACK</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
+                          {Object.entries(project.the90DayTest.specificMetrics).map(([key, metric]: [string, any]) => (
+                            <div key={key} style={{ background: 'rgba(241,7,163,0.1)', padding: '0.75rem', borderRadius: '8px', border: metric.critical ? '1px solid #f107a3' : 'none' }}>
+                              <div style={{ fontSize: '0.85rem', color: '#f107a3', fontWeight: '700', marginBottom: '0.3rem' }}>{metric.metric}</div>
+                              <div style={{ fontSize: '0.8rem', color: '#00ff88', marginBottom: '0.2rem' }}>Target: {metric.target}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#888' }}>Measure: {metric.measureHow}</div>
+                              {metric.critical && (
+                                <div style={{ fontSize: '0.75rem', color: '#ff4444', marginTop: '0.3rem', fontWeight: '600' }}>⚠️ {metric.critical}</div>
+                              )}
                             </div>
                           ))}
-                        </SubSection>
-                      )}
-
-                      {/* Strategic Pivots */}
-                      {project.validationFramework?.strategicPivots?.length > 0 && (
-                        <SubSection title="🔄 IF TEST RESULTS SHOW...">
-                          {project.validationFramework.strategicPivots.map((pivot: any, i: number) => (
-                            <div key={i} style={{ background: 'rgba(241,7,163,0.1)', padding: '0.75rem', borderRadius: '6px', marginBottom: '0.5rem' }}>
-                              <InfoRow label="Scenario" value={pivot.scenario} color="#f107a3" />
-                              <InfoRow label="→ Pivot to" value={pivot.pivot} color="#00ff88" />
-                              <InfoRow label="Why" value={pivot.reasoning} />
-                              {pivot.newMarket && <InfoRow label="New Market" value={pivot.newMarket} color="#00d4ff" />}
-                            </div>
-                          ))}
-                        </SubSection>
-                      )}
-
-                      {/* Pivot Opportunities */}
-                      {project.pivotOpportunities?.length > 0 && (
-                        <SubSection title="💡 ALTERNATIVE DIRECTIONS">
-                          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-                            {project.pivotOpportunities.map((opp: string, i: number) => (
-                              <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{opp}</li>
-                            ))}
-                          </ul>
-                        </SubSection>
-                      )}
-
-                      {/* Intelligent Shelving */}
-                      <SubSection title="📦 IF VALIDATION FAILS">
-                        <InfoRow label="When" value={project.validationFramework?.intelligentShelving?.if} />
-                        <InfoRow label="Action" value={project.validationFramework?.intelligentShelving?.then} color="#7b2ff7" />
-                        <div style={{ marginTop: '0.5rem' }}>
-                          <span style={{ fontSize: '0.85rem', color: '#888' }}>Salvage Value:</span>
-                          <ul style={{ margin: '0.25rem 0 0', paddingLeft: '1.2rem' }}>
-                            {project.validationFramework?.intelligentShelving?.salvageValue?.map((v: string, i: number) => (
-                              <li key={i} style={{ fontSize: '0.8rem', color: '#ccc', marginBottom: '0.15rem' }}>{v}</li>
-                            ))}
-                          </ul>
                         </div>
-                      </SubSection>
-                    </>
-                  )}
-                </div>
+                      </div>
+                    )}
 
-                {/* Industry Benchmarks */}
-                <SubSection title="📊 INDUSTRY REALITY">
-                  <InfoRow label="Sector" value={project.industryBenchmarks?.sector} />
-                  <InfoRow label="Failure Rate" value={project.industryBenchmarks?.failureRate} color="#ff4444" />
-                  <InfoRow label="Success Metric" value={project.industryBenchmarks?.successMetric} color="#00ff88" />
-                  <InfoRow label="Business Model" value={project.industryBenchmarks?.dominantModel} />
-                </SubSection>
+                    {/* Success Decision Criteria */}
+                    {project.the90DayTest.successDecision && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <div style={{ fontSize: '0.8rem', color: '#00ff88', fontWeight: '700', marginBottom: '0.75rem' }}>✅ DECISION THRESHOLDS</div>
+                        {Object.entries(project.the90DayTest.successDecision).map(([level, criteria]) => (
+                          <div key={level} style={{
+                            fontSize: '0.85rem',
+                            marginBottom: '0.3rem',
+                            padding: '0.4rem 0.6rem',
+                            borderRadius: '4px',
+                            background: level === 'strong' ? 'rgba(0,255,136,0.1)' : level === 'moderate' ? 'rgba(255,193,7,0.1)' : 'rgba(255,68,68,0.1)'
+                          }}>
+                            <span style={{ color: level === 'strong' ? '#00ff88' : level === 'moderate' ? '#ffc107' : '#ff4444', fontWeight: '700' }}>
+                              {level.toUpperCase()}:
+                            </span>{' '}
+                            <span style={{ color: '#ccc' }}>{criteria as string}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-                {/* Decision Framework */}
-                <SubSection title="🤔 BEFORE YOU DECIDE">
-                  <InfoRow label="Passion Check" value={project.decisionFramework?.passion} />
-                  <InfoRow label="Resource Reality" value={project.decisionFramework?.resources} />
-                  <InfoRow label="Skill Value" value={project.decisionFramework?.skillDevelopment} />
-                  <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'rgba(123,47,247,0.2)', borderRadius: '6px' }}>
-                    <span style={{ fontSize: '0.9rem', color: '#7b2ff7', fontWeight: '700' }}>→ Recommendation: </span>
-                    <span style={{ fontSize: '0.9rem', color: '#fff' }}>{project.decisionFramework?.recommendation}</span>
-                  </div>
-                </SubSection>
+                    {/* Organic Testing Channels */}
+                    {project.organicTestingChannels && project.organicTestingChannels.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: '0.8rem', color: '#00d4ff', fontWeight: '700', marginBottom: '0.75rem' }}>🌐 WHERE TO FIND TESTERS ($0 COST)</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                          {project.organicTestingChannels.map((channel: any, i: number) => (
+                            <div key={i} style={{ background: 'rgba(0,212,255,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                              <div style={{ fontSize: '0.85rem', color: '#00d4ff', fontWeight: '600', marginBottom: '0.3rem' }}>{channel.platform}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#ccc' }}>Reach: {channel.expectedReach}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#00ff88' }}>Cost: {channel.cost}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </Section>
+                )}
+
+                {/* Market Context */}
+                {project.marketContext && (
+                  <Section title="📊 MARKET CONTEXT" color="#7b2ff7">
+                    <InfoRow label="Sector" value={project.marketContext.sector} />
+                    <InfoRow label="Market Size" value={project.marketContext.marketSize} color="#00ff88" />
+                    <InfoRow label="Advantage" value={project.marketContext.advantage} color="#00d4ff" />
+                    <InfoRow label="Challenge" value={project.marketContext.challenge} color="#ff4444" />
+                    <InfoRow label="Competition" value={project.marketContext.competition} />
+                  </Section>
+                )}
+
+                {/* Pivot Triggers */}
+                {project.pivotTriggers && (
+                  <Section title="🔄 WHEN TO PIVOT" color="#f107a3">
+                    {Object.entries(project.pivotTriggers).map(([trigger, action]) => (
+                      <div key={trigger} style={{ marginBottom: '0.5rem', padding: '0.5rem', background: 'rgba(241,7,163,0.1)', borderRadius: '6px' }}>
+                        <span style={{ color: '#f107a3', fontWeight: '600', fontSize: '0.8rem' }}>
+                          {trigger.replace(/([A-Z])/g, ' $1').replace(/^if/, 'If')}:
+                        </span>{' '}
+                        <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{action as string}</span>
+                      </div>
+                    ))}
+                  </Section>
+                )}
+
+                {/* Next Milestones */}
+                {project.nextMilestones?.after90Days && (
+                  <Section title="🚀 AFTER 90 DAYS (IF VALIDATED)" color="#00ff88">
+                    <InfoRow label="Next Build" value={project.nextMilestones.after90Days.ifValidated} color="#fff" />
+                    <InfoRow label="Funding Potential" value={project.nextMilestones.after90Days.funding} color="#00ff88" />
+                    <InfoRow label="Valuation" value={project.nextMilestones.after90Days.valuation} color="#00d4ff" />
+                  </Section>
+                )}
 
                 {/* Brutal Verdict */}
                 <div style={{
@@ -296,7 +299,7 @@ export default function Home() {
                   borderLeft: '4px solid #f107a3'
                 }}>
                   <div style={{ fontSize: '0.75rem', color: '#f107a3', fontWeight: '700', marginBottom: '0.5rem' }}>VERDICT</div>
-                  <div style={{ fontSize: '0.95rem', color: '#fff', fontWeight: '600', lineHeight: '1.5' }}>
+                  <div style={{ fontSize: '0.95rem', color: '#fff', fontWeight: '600', lineHeight: '1.6' }}>
                     {project.brutalVerdict}
                   </div>
                 </div>
