@@ -5,6 +5,119 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
 
+async function fetchRepoDetails(repoName: string) {
+  const baseUrl = `https://api.github.com/repos/NyxSpecter4/${repoName}`
+  const headers = { 'Accept': 'application/vnd.github.v3+json' }
+
+  // Fetch in parallel
+  const [readmeRes, packageRes, contentsRes, commitsRes] = await Promise.all([
+    fetch(`${baseUrl}/readme`, { headers }).catch(() => null),
+    fetch(`${baseUrl}/contents/package.json`, { headers }).catch(() => null),
+    fetch(`${baseUrl}/contents`, { headers }).catch(() => null),
+    fetch(`${baseUrl}/commits?per_page=10`, { headers }).catch(() => null)
+  ])
+
+  // Parse README
+  let readme = ''
+  if (readmeRes?.ok) {
+    const readmeData = await readmeRes.json()
+    if (readmeData.content) {
+      readme = Buffer.from(readmeData.content, 'base64').toString('utf-8').slice(0, 2000)
+    }
+  }
+
+  // Parse package.json
+  let packageJson: any = null
+  if (packageRes?.ok) {
+    const pkgData = await packageRes.json()
+    if (pkgData.content) {
+      try {
+        packageJson = JSON.parse(Buffer.from(pkgData.content, 'base64').toString('utf-8'))
+      } catch {}
+    }
+  }
+
+  // Parse file structure
+  let files: string[] = []
+  if (contentsRes?.ok) {
+    const contents = await contentsRes.json()
+    if (Array.isArray(contents)) {
+      files = contents.map((f: any) => f.name)
+    }
+  }
+
+  // Parse commits
+  let commits: any[] = []
+  let lastCommitDate = ''
+  let commitFrequency = ''
+  if (commitsRes?.ok) {
+    commits = await commitsRes.json()
+    if (Array.isArray(commits) && commits.length > 0) {
+      lastCommitDate = commits[0]?.commit?.author?.date || ''
+
+      // Calculate frequency
+      if (commits.length >= 2) {
+        const first = new Date(commits[0]?.commit?.author?.date)
+        const last = new Date(commits[commits.length - 1]?.commit?.author?.date)
+        const daysDiff = Math.max(1, (first.getTime() - last.getTime()) / (1000 * 60 * 60 * 24))
+        const commitsPerWeek = (commits.length / daysDiff) * 7
+        commitFrequency = commitsPerWeek > 5 ? 'Very Active' : commitsPerWeek > 1 ? 'Active' : commitsPerWeek > 0.25 ? 'Occasional' : 'Stale'
+      }
+    }
+  }
+
+  // Determine tech stack from package.json or files
+  const techStack: string[] = []
+  if (packageJson?.dependencies) {
+    const deps = Object.keys(packageJson.dependencies)
+    if (deps.includes('next')) techStack.push('Next.js')
+    if (deps.includes('react')) techStack.push('React')
+    if (deps.includes('vue')) techStack.push('Vue')
+    if (deps.includes('express')) techStack.push('Express')
+    if (deps.includes('openai')) techStack.push('OpenAI API')
+    if (deps.includes('stripe')) techStack.push('Stripe')
+    if (deps.includes('supabase') || deps.includes('@supabase/supabase-js')) techStack.push('Supabase')
+    if (deps.includes('prisma') || deps.includes('@prisma/client')) techStack.push('Prisma')
+    if (deps.includes('tailwindcss')) techStack.push('Tailwind')
+    if (deps.includes('three')) techStack.push('Three.js')
+    if (deps.includes('phaser')) techStack.push('Phaser')
+    if (deps.includes('unity')) techStack.push('Unity')
+  }
+
+  // Check for config files
+  const hasVercel = files.includes('vercel.json') || files.includes('.vercel')
+  const hasDocker = files.includes('Dockerfile') || files.includes('docker-compose.yml')
+  const hasTests = files.includes('__tests__') || files.includes('test') || files.includes('tests') || files.some(f => f.includes('.test.') || f.includes('.spec.'))
+  const hasCI = files.includes('.github')
+
+  return {
+    readme: readme.slice(0, 1500),
+    packageJson: packageJson ? {
+      name: packageJson.name,
+      version: packageJson.version,
+      scripts: Object.keys(packageJson.scripts || {}),
+      dependencies: Object.keys(packageJson.dependencies || {}).slice(0, 15),
+      devDependencies: Object.keys(packageJson.devDependencies || {}).slice(0, 10)
+    } : null,
+    files: files.slice(0, 20),
+    techStack,
+    lastCommitDate,
+    commitFrequency,
+    recentCommits: commits.slice(0, 5).map((c: any) => ({
+      message: c?.commit?.message?.split('\n')[0]?.slice(0, 80),
+      date: c?.commit?.author?.date
+    })),
+    indicators: {
+      hasVercel,
+      hasDocker,
+      hasTests,
+      hasCI,
+      hasReadme: readme.length > 100,
+      hasPackageJson: !!packageJson
+    }
+  }
+}
+
 export async function GET() {
   try {
     const githubRes = await fetch('https://api.github.com/users/NyxSpecter4/repos?per_page=100&sort=updated')
@@ -14,138 +127,120 @@ export async function GET() {
       return NextResponse.json({ error: 'GitHub API error', details: repos.message }, { status: 500 })
     }
 
-    const repoList = repos
-      .filter((r: any) => r.name !== 'proxy-dealmaker')
-      .slice(0, 10)
-      .map((r: any) => ({
-        name: r.name,
-        description: r.description,
-        language: r.language,
-        stars: r.stargazers_count,
-        forks: r.forks_count,
-        size: r.size,
-        topics: r.topics,
-        updated_at: r.updated_at
-      }))
+    // Filter and get basic info
+    const filteredRepos = repos.filter((r: any) => r.name !== 'proxy-dealmaker').slice(0, 10)
+
+    // Fetch detailed info for each repo in parallel
+    const repoDetails = await Promise.all(
+      filteredRepos.map(async (r: any) => {
+        const details = await fetchRepoDetails(r.name)
+        return {
+          name: r.name,
+          description: r.description,
+          language: r.language,
+          stars: r.stargazers_count,
+          forks: r.forks_count,
+          size: r.size,
+          topics: r.topics,
+          created_at: r.created_at,
+          updated_at: r.updated_at,
+          homepage: r.homepage,
+          has_pages: r.has_pages,
+          ...details
+        }
+      })
+    )
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{
         role: 'user',
-        content: `You are a startup advisor with access to 2024 industry benchmark data. Give specific, data-backed metrics.
+        content: `You are a startup advisor analyzing GitHub repos with REAL data. Give specific metrics-based analysis.
 
-${JSON.stringify(repoList, null, 2)}
+REPO DATA (with actual README, package.json, commits):
+${JSON.stringify(repoDetails, null, 2)}
+
+ANALYZE ALL REPOS. For each one, assess:
+1. Is it a working project? (check files, package.json, README)
+2. Is it deployed? (check homepage, vercel config)
+3. Is it abandoned? (check lastCommitDate, commitFrequency)
+4. What's the tech stack? (check techStack, dependencies)
+5. How complex is it? (check file count, dependencies)
 
 REAL INDUSTRY BENCHMARKS (2024):
-IDLE GAMES: DAU/MAU 18%, Avg Sessions 5.3/day, Session 6-8min, D1 Retention 35-50%, D7 20%+, D30 10%+, CPI $4.83, ARPDAU 9x higher than hyper-casual
-SHOOTER GAMES: $72B market, high CPI, competitive
-SAAS B2B: 3-7x ARR multiple, CAC payback <12mo, churn <5%/mo
+- Idle games: D1 35-50%, D7 20%+, DAU/MAU 18%, CPI $4.83
+- Shooter: $72B market, high competition
+- SaaS: 3-7x ARR, <5% churn
 
 Return JSON:
 {
   "totalValue": 0,
-  "portfolioSummary": "Which project to focus on and why",
-  "topPick": "best project name",
+  "portfolioSummary": "Honest overview of ALL repos based on actual code analysis",
+  "topPick": "best repo based on actual completeness and potential",
   "projects": [{
     "name": "repo-name",
     "realisticValue": 0,
-    "optimisticValue": 10000,
-    "stage": "Concept/Pre-MVP/MVP/Traction",
+    "optimisticValue": 5000,
+    "stage": "Concept/Pre-MVP/MVP/Deployed",
+
+    "codeAnalysis": {
+      "completeness": "10-100% based on actual files",
+      "techStack": "from actual package.json",
+      "isDeployed": true/false,
+      "lastActivity": "date and frequency",
+      "codeQuality": "assessment based on files/structure"
+    },
 
     "the90DayTest": {
-      "buildThis": "5-min vertical slice of core mechanic (NOT full product)",
-      "example": "Single level/workflow testing core loop",
-      "testWith": "100 users from Reddit, Discord, ProductHunt",
-      "costPerInstall": "$0 organic vs $X industry average",
-
+      "buildThis": "specific next step based on ACTUAL code state",
+      "example": "concrete example",
+      "testWith": "100 users from Reddit, Discord",
+      "costPerInstall": "$0 organic vs industry average",
       "specificMetrics": {
-        "session1": {
-          "metric": "Session length",
-          "target": ">X minutes (industry: Ymin)",
-          "measureHow": "Analytics or timer tracking"
-        },
-        "day1": {
-          "metric": "Day 1 Retention",
-          "target": "X%+ (industry: Y% for this sector)",
-          "measureHow": "Track return users",
-          "critical": "KEY METRIC - if <X% kill it"
-        },
-        "engagement": {
-          "metric": "Daily sessions or usage",
-          "target": "X+ per week (industry: Y)",
-          "measureHow": "Track per user"
-        },
-        "stickiness": {
-          "metric": "DAU/MAU or equivalent",
-          "target": ">X% (industry: Y%)",
-          "measureHow": "Active today / active this month"
-        }
+        "day1": { "metric": "D1 Retention", "target": ">35%", "critical": "If <20% kill it" }
       },
-
       "successDecision": {
-        "strong": "Metric >X% -> proceed to full MVP",
-        "moderate": "Metric Y-X% -> test more, iterate",
-        "weak": "Metric <Y% -> pivot or kill"
+        "strong": ">40% -> proceed",
+        "weak": "<20% -> kill"
       },
-
       "timeline": {
-        "week1_2": "Build minimal prototype",
-        "week3_4": "Get 100 testers organically",
-        "week5_6": "Measure retention + engagement",
-        "week7_8": "Analyze, decide: proceed/pivot/kill"
+        "week1_2": "specific task based on current code",
+        "week3_4": "testing phase",
+        "week5_8": "measure and decide"
       }
     },
 
     "marketContext": {
-      "sector": "Gaming/SaaS/Tool",
-      "marketSize": "$XB market",
-      "advantage": "What gives this project an edge",
-      "challenge": "Main obstacle to success",
-      "competition": "Who dominates and why"
+      "sector": "based on actual project type",
+      "marketSize": "$XB",
+      "competition": "realistic assessment"
     },
 
     "organicTestingChannels": [
-      {
-        "platform": "Reddit subreddits",
-        "expectedReach": "X views, Y testers",
-        "cost": "$0"
-      },
-      {
-        "platform": "Discord servers",
-        "expectedReach": "Direct access to users",
-        "cost": "$0"
-      },
-      {
-        "platform": "Platform-specific (itch.io, ProductHunt)",
-        "expectedReach": "X views if featured",
-        "cost": "$0"
-      }
+      { "platform": "specific subreddit", "expectedReach": "X testers", "cost": "$0" }
     ],
 
     "pivotTriggers": {
-      "ifFeatureAWorks": "Scenario -> specific pivot",
-      "ifFeatureBFails": "Scenario -> alternative direction",
-      "ifRetentionLow": "Core loop broken -> salvage strategy"
+      "ifXWorks": "specific pivot based on actual features"
     },
 
     "nextMilestones": {
       "after90Days": {
-        "ifValidated": "Next steps with specific targets",
-        "funding": "What metrics attract investment",
-        "valuation": "How value increases with proven metrics"
+        "ifValidated": "specific next build based on code",
+        "funding": "realistic funding path",
+        "valuation": "how value increases"
       }
     },
 
-    "brutalVerdict": "Worth $X now. Test with 100 users. If [key metric] >Y%, you have something. If <Z%, kill it. [Market context]. [Specific advantage or disadvantage]."
+    "brutalVerdict": "Based on ACTUAL code: [completeness]%, [deployed/not], [active/stale]. Worth $X because [specific reasons]."
   }]
 }
 
 CRITICAL:
-1. Use REAL benchmark numbers from 2024 data for the sector
-2. Give specific platforms to find testers
-3. Identify THE key metric for this project type
-4. Explain what each metric means and how to measure
-5. Give clear decision criteria (>X% proceed, <Y% kill)`
+1. Base analysis on ACTUAL repo data (README, files, commits)
+2. Note if repo is incomplete, abandoned, or just started
+3. Recommend specific next steps based on current code state
+4. Be honest about deployment status and code completeness`
       }],
       response_format: { type: 'json_object' }
     })
