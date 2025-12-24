@@ -82,6 +82,11 @@ async function fetchRepoDetails(repoName: string) {
     if (deps.includes('three')) techStack.push('Three.js')
     if (deps.includes('phaser')) techStack.push('Phaser')
     if (deps.includes('unity')) techStack.push('Unity')
+    if (deps.includes('ethers')) techStack.push('Ethers.js (Crypto)')
+    if (deps.includes('web3')) techStack.push('Web3.js')
+    if (deps.includes('socket.io')) techStack.push('Socket.io')
+    if (deps.includes('mongoose')) techStack.push('MongoDB')
+    if (deps.includes('firebase')) techStack.push('Firebase')
   }
 
   // Check for config files
@@ -96,15 +101,15 @@ async function fetchRepoDetails(repoName: string) {
       name: packageJson.name,
       version: packageJson.version,
       scripts: Object.keys(packageJson.scripts || {}),
-      dependencies: Object.keys(packageJson.dependencies || {}).slice(0, 15),
+      dependencies: Object.keys(packageJson.dependencies || {}).slice(0, 20),
       devDependencies: Object.keys(packageJson.devDependencies || {}).slice(0, 10)
     } : null,
-    files: files.slice(0, 20),
+    files: files.slice(0, 25),
     techStack,
     lastCommitDate,
     commitFrequency,
     recentCommits: commits.slice(0, 5).map((c: any) => ({
-      message: c?.commit?.message?.split('\n')[0]?.slice(0, 80),
+      message: c?.commit?.message?.split('\n')[0]?.slice(0, 100),
       date: c?.commit?.author?.date
     })),
     indicators: {
@@ -155,92 +160,114 @@ export async function GET() {
       model: 'gpt-3.5-turbo',
       messages: [{
         role: 'user',
-        content: `You are a startup advisor analyzing GitHub repos with REAL data. Give specific metrics-based analysis.
+        content: `You are a startup analyst with ACTUAL CODE ACCESS. You have real data - USE IT.
 
-REPO DATA (with actual README, package.json, commits):
+REPO DATA (README, package.json, files, commits):
 ${JSON.stringify(repoDetails, null, 2)}
 
-ANALYZE ALL REPOS. For each one, assess:
-1. Is it a working project? (check files, package.json, README)
-2. Is it deployed? (check homepage, vercel config)
-3. Is it abandoned? (check lastCommitDate, commitFrequency)
-4. What's the tech stack? (check techStack, dependencies)
-5. How complex is it? (check file count, dependencies)
+MANDATORY: Reference actual data in analysis. Don't be generic.
 
-REAL INDUSTRY BENCHMARKS (2024):
-- Idle games: D1 35-50%, D7 20%+, DAU/MAU 18%, CPI $4.83
-- Shooter: $72B market, high competition
-- SaaS: 3-7x ARR, <5% churn
-
-Return JSON:
+For each repo return:
 {
   "totalValue": 0,
-  "portfolioSummary": "Honest overview of ALL repos based on actual code analysis",
-  "topPick": "best repo based on actual completeness and potential",
+  "portfolioSummary": "Overview referencing ACTUAL findings from code",
+  "topPick": "best repo based on actual completeness",
   "projects": [{
     "name": "repo-name",
     "realisticValue": 0,
     "optimisticValue": 5000,
-    "stage": "Concept/Pre-MVP/MVP/Deployed",
+    "stage": "Concept/MVP/Production based on ACTUAL completeness",
 
     "codeAnalysis": {
-      "completeness": "10-100% based on actual files",
-      "techStack": "from actual package.json",
-      "isDeployed": true/false,
-      "lastActivity": "date and frequency",
-      "codeQuality": "assessment based on files/structure"
+      "completeness": "X% - EXPLAIN: 'Has Next.js setup, OpenAI integration, but missing tests'",
+      "techStack": ["ACTUAL dependencies from package.json"],
+      "isDeployed": "Yes (has vercel.json + homepage) / No (missing config) / Partial",
+      "lastActivity": "YYYY-MM-DD - X days ago",
+      "commitFrequency": "from data: Very Active/Active/Stale",
+      "codeQuality": "Good (has tests, CI) / Basic (missing tests) / Poor (abandoned)",
+      "keyFindings": [
+        "SPECIFIC: 'Uses OpenAI API - AI features implemented'",
+        "SPECIFIC: 'Has Stripe - payment exists'",
+        "SPECIFIC: 'No tests - quality uncertain'",
+        "SPECIFIC: 'Last commit 2 days ago added X feature'"
+      ]
     },
 
+    "actualDescription": "Based on README content: [summarize what README ACTUALLY says]",
+
     "the90DayTest": {
-      "buildThis": "specific next step based on ACTUAL code state",
-      "example": "concrete example",
-      "testWith": "100 users from Reddit, Discord",
-      "costPerInstall": "$0 organic vs industry average",
+      "buildThis": "SPECIFIC based on what's MISSING: 'Add tests (0% exist)' or 'Complete Stripe checkout (integrated but incomplete)'",
+      "example": "Based on deps: 'Has Three.js so add 3D viz' or 'Has Phaser so expand game'",
+      "testWith": "100 users from [SPECIFIC community for THIS project]",
+      "costPerInstall": "$0 organic first",
+
       "specificMetrics": {
-        "day1": { "metric": "D1 Retention", "target": ">35%", "critical": "If <20% kill it" }
+        "session1": {
+          "metric": "Session length",
+          "target": "Games >6min / SaaS >3min / Content >8min",
+          "measureHow": "Add Google Analytics or [tool for this stack]"
+        },
+        "day1": {
+          "metric": "Day 1 Retention",
+          "target": "Games 35-50% / SaaS 40-60%",
+          "measureHow": "Email/analytics tracking",
+          "critical": "Games <20% kill / SaaS <30% kill"
+        }
       },
+
       "successDecision": {
-        "strong": ">40% -> proceed",
-        "weak": "<20% -> kill"
+        "strong": ">X% -> proceed (SPECIFIC to project type)",
+        "moderate": "Y-X% -> iterate",
+        "weak": "<Y% -> kill"
       },
+
       "timeline": {
-        "week1_2": "specific task based on current code",
-        "week3_4": "testing phase",
-        "week5_8": "measure and decide"
+        "week1_2": "SPECIFIC: 'Add tests' or 'Deploy to Vercel' or 'Complete payment flow'",
+        "week3_4": "Get testers from [SPECIFIC subreddit for this project]",
+        "week5_6": "Measure [SPECIFIC metrics for this type]",
+        "week7_8": "Decide based on [SPECIFIC threshold]"
       }
     },
 
     "marketContext": {
-      "sector": "based on actual project type",
-      "marketSize": "$XB",
-      "competition": "realistic assessment"
+      "sector": "SPECIFIC: Gaming/SaaS/Tool based on actual deps",
+      "marketSize": "$XB for THIS specific niche",
+      "advantage": "SPECIFIC: 'Three.js gives 3D edge' or 'OpenAI integration'",
+      "challenge": "SPECIFIC: 'No tests' or 'Payment incomplete' or 'Abandoned 6 months'",
+      "competition": "SPECIFIC competitors in this niche"
     },
 
     "organicTestingChannels": [
-      { "platform": "specific subreddit", "expectedReach": "X testers", "cost": "$0" }
+      { "platform": "r/[specific subreddit for THIS project]", "expectedReach": "X testers", "cost": "$0" }
     ],
 
     "pivotTriggers": {
-      "ifXWorks": "specific pivot based on actual features"
+      "ifFeatureXWorks": "SPECIFIC: 'If 3D viz loved but text ignored -> pure 3D tool'",
+      "ifFeatureYFails": "SPECIFIC: 'If crypto confuses users -> remove ethers.js, standard payments'",
+      "ifRetentionLow": "Salvage [SPECIFIC tech] for different product"
     },
 
     "nextMilestones": {
       "after90Days": {
-        "ifValidated": "specific next build based on code",
-        "funding": "realistic funding path",
-        "valuation": "how value increases"
+        "ifValidated": "SPECIFIC: 'Add test coverage' or 'Scale Supabase backend'",
+        "funding": "$X-$Y based on deployed status + traction",
+        "valuation": "Deployed + users + revenue = $X / Just code = $0-500"
       }
     },
 
-    "brutalVerdict": "Based on ACTUAL code: [completeness]%, [deployed/not], [active/stale]. Worth $X because [specific reasons]."
+    "brutalVerdict": "ACTUAL: [X]% complete, [deployed/not], [Active/Stale since DATE]. Worth $Y because [SPECIFIC from code]. Next: [SPECIFIC action]."
   }]
 }
 
-CRITICAL:
-1. Base analysis on ACTUAL repo data (README, files, commits)
-2. Note if repo is incomplete, abandoned, or just started
-3. Recommend specific next steps based on current code state
-4. Be honest about deployment status and code completeness`
+RULES:
+1. ALWAYS reference actual dependencies (OpenAI, Stripe, Three.js)
+2. ALWAYS explain completeness % with reasons
+3. ALWAYS use README content
+4. ALWAYS mention deployment status
+5. ALWAYS reference last commit date
+6. Different metrics for different project types
+7. If data missing say "No README" or "No deps"
+8. USE THE DATA. Be specific. No generic BS.`
       }],
       response_format: { type: 'json_object' }
     })
