@@ -257,7 +257,251 @@ export default function Home() {
                   </Section>
                 )}
 
-                {/* Market Context */}
+                
+                {/* Week-by-Week Timeline */}
+                {project.the90DayTest?.weekByWeek && (
+                  <div style={{ background: 'rgba(123,47,247,0.1)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                    <div style={{ fontSize: '0.8rem', color: '#7b2ff7', fontWeight: '700', marginBottom: '0.75rem' }}>📅 8-WEEK TIMELINE</div>
+                    {Object.entries(project.the90DayTest.weekByWeek).map(([key, value]) => (
+                      <div key={key} style={{ fontSize: '0.85rem', marginBottom: '0.3rem' }}>
+                        <span style={{ color: '#7b2ff7', fontWeight: '600' }}>{key.replace(/_/g, '-').replace('week', 'Week ')}:</span>{' '}
+                        <span style={{ color: '#ccc' }}>{value as string}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Technical Debt */}
+                {project.technicalDebt && (
+                  <Section title="🔧 TECHNICAL DEBT" color="#ff6b6b">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                      <div style={{ fontSize: '2rem', fontWeight: '900', color: '#ff6b6b' }}>{project.technicalDebt.score}</div>
+                      <div style={{ fontSize: '0.85rem', color: '#888' }}>Technical Health Score</div>
+                    </div>
+                    {project.technicalDebt.breakdown && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem', marginBottom: '1rem' }}>
+                        {Object.entries(project.technicalDebt.breakdown).map(([key, value]) => (
+                          <div key={key} style={{ background: 'rgba(255,107,107,0.1)', padding: '0.5rem', borderRadius: '6px' }}>
+                            <div style={{ fontSize: '0.75rem', color: '#ff6b6b', fontWeight: '600', textTransform: 'capitalize' }}>{key}</div>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{value as string}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {project.technicalDebt.technicalRisks && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#ff4444', fontWeight: '600', marginBottom: '0.3rem' }}>⚠️ Risks:</div>
+                        {project.technicalDebt.technicalRisks.map((risk: string, i: number) => (
+                          <div key={i} style={{ fontSize: '0.8rem', color: '#ccc', marginLeft: '0.5rem' }}>• {risk}</div>
+                        ))}
+                      </div>
+                    )}
+                    <InfoRow label="Cost to Fix" value={project.technicalDebt.costToFix} color="#00ff88" />
+                  </Section>
+                )}
+
+                {/* Competitive Analysis */}
+                {project.competitiveAnalysis && (
+                  <Section title="⚔️ COMPETITIVE ANALYSIS" color="#ffa500">
+                    {project.competitiveAnalysis.directCompetitors && (
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', marginBottom: '1rem' }}>
+                        {project.competitiveAnalysis.directCompetitors.map((comp: any, i: number) => (
+                          <div key={i} style={{ background: 'rgba(255,165,0,0.1)', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(255,165,0,0.3)' }}>
+                            <div style={{ fontSize: '0.9rem', color: '#ffa500', fontWeight: '700', marginBottom: '0.3rem' }}>{comp.name}</div>
+                            <div style={{ fontSize: '0.8rem', color: '#00ff88', marginBottom: '0.2rem' }}>{comp.metrics}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#888', marginBottom: '0.2rem' }}>Advantage: {comp.advantage}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#00d4ff' }}>Your Edge: {comp.yourEdge}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <InfoRow label="Market Position" value={project.competitiveAnalysis.marketPosition} />
+                    <InfoRow label="Moat Strength" value={project.competitiveAnalysis.moatStrength} color={project.competitiveAnalysis.moatStrength?.includes('WEAK') ? '#ff4444' : '#00ff88'} />
+                  </Section>
+                )}
+
+                {/* Revenue Projections */}
+                {project.revenueProjections && (
+                  <Section title="💰 REVENUE PROJECTIONS" color="#00ff88">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                      {project.revenueProjections.year1 && (
+                        <div style={{ background: 'rgba(0,255,136,0.1)', padding: '1rem', borderRadius: '8px' }}>
+                          <div style={{ fontSize: '0.85rem', color: '#00ff88', fontWeight: '700', marginBottom: '0.5rem' }}>YEAR 1</div>
+                          <div style={{ fontSize: '0.8rem', color: '#ccc', marginBottom: '0.3rem' }}>{project.revenueProjections.year1.scenario}</div>
+                          {project.revenueProjections.year1.assumptions?.map((a: string, i: number) => (
+                            <div key={i} style={{ fontSize: '0.75rem', color: '#888', marginLeft: '0.5rem' }}>• {a}</div>
+                          ))}
+                          <div style={{ marginTop: '0.5rem' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#ff4444' }}>Realistic: {project.revenueProjections.year1.realistic}</span>
+                            <span style={{ fontSize: '0.8rem', color: '#00ff88', marginLeft: '1rem' }}>Upside: {project.revenueProjections.year1.upside}</span>
+                          </div>
+                        </div>
+                      )}
+                      {project.revenueProjections.year2 && (
+                        <div style={{ background: 'rgba(0,212,255,0.1)', padding: '1rem', borderRadius: '8px' }}>
+                          <div style={{ fontSize: '0.85rem', color: '#00d4ff', fontWeight: '700', marginBottom: '0.5rem' }}>YEAR 2</div>
+                          <div style={{ fontSize: '0.8rem', color: '#ccc', marginBottom: '0.3rem' }}>{project.revenueProjections.year2.scenario}</div>
+                          {project.revenueProjections.year2.assumptions?.map((a: string, i: number) => (
+                            <div key={i} style={{ fontSize: '0.75rem', color: '#888', marginLeft: '0.5rem' }}>• {a}</div>
+                          ))}
+                          <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#00ff88', fontWeight: '600' }}>
+                            {project.revenueProjections.year2.realistic}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <InfoRow label="Break-Even" value={project.revenueProjections.breakEven} color="#ffc107" />
+                  </Section>
+                )}
+
+                {/* Go-to-Market Strategy */}
+                {project.goToMarketStrategy && (
+                  <Section title="🚀 GO-TO-MARKET STRATEGY" color="#00d4ff">
+                    {project.goToMarketStrategy.phase1_organic && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <div style={{ fontSize: '0.8rem', color: '#00ff88', fontWeight: '700', marginBottom: '0.5rem' }}>PHASE 1: ORGANIC ($0)</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem' }}>
+                          {project.goToMarketStrategy.phase1_organic.channels?.map((ch: any, i: number) => (
+                            <div key={i} style={{ background: 'rgba(0,255,136,0.1)', padding: '0.5rem', borderRadius: '6px' }}>
+                              <div style={{ fontSize: '0.8rem', color: '#00ff88', fontWeight: '600' }}>{ch.platform}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#ccc' }}>Reach: {ch.reach} | Conv: {ch.conversion}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#888' }}>{ch.timeline}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#00ff88', marginTop: '0.5rem' }}>Target: {project.goToMarketStrategy.phase1_organic.target}</div>
+                      </div>
+                    )}
+                    {project.goToMarketStrategy.phase2_paid && (
+                      <div>
+                        <div style={{ fontSize: '0.8rem', color: '#ffa500', fontWeight: '700', marginBottom: '0.5rem' }}>PHASE 2: PAID</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem' }}>
+                          {project.goToMarketStrategy.phase2_paid.channels?.map((ch: any, i: number) => (
+                            <div key={i} style={{ background: 'rgba(255,165,0,0.1)', padding: '0.5rem', borderRadius: '6px' }}>
+                              <div style={{ fontSize: '0.8rem', color: '#ffa500', fontWeight: '600' }}>{ch.platform}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#ccc' }}>CPI: {ch.expectedCPI} | Budget: {ch.budget}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#888' }}>Reach: {ch.reach} | {ch.timeline}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#ffa500', marginTop: '0.5rem' }}>Target: {project.goToMarketStrategy.phase2_paid.target}</div>
+                      </div>
+                    )}
+                  </Section>
+                )}
+
+                {/* Funding Roadmap */}
+                {project.fundingRoadmap && (
+                  <Section title="💎 FUNDING ROADMAP" color="#7b2ff7">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      {project.fundingRoadmap.bootstrap && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(123,47,247,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                          <div style={{ width: '80px', fontSize: '0.75rem', color: '#7b2ff7', fontWeight: '700' }}>BOOTSTRAP</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.fundingRoadmap.bootstrap.milestone}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.fundingRoadmap.bootstrap.timeline} | Val: {project.fundingRoadmap.bootstrap.valuation}</div>
+                          </div>
+                        </div>
+                      )}
+                      {project.fundingRoadmap.angel && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(0,255,136,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                          <div style={{ width: '80px', fontSize: '0.75rem', color: '#00ff88', fontWeight: '700' }}>ANGEL</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.fundingRoadmap.angel.milestone}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#00ff88' }}>{project.fundingRoadmap.angel.funding}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.fundingRoadmap.angel.timeline} | Val: {project.fundingRoadmap.angel.valuation}</div>
+                          </div>
+                        </div>
+                      )}
+                      {project.fundingRoadmap.seed && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(0,212,255,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                          <div style={{ width: '80px', fontSize: '0.75rem', color: '#00d4ff', fontWeight: '700' }}>SEED</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.8rem', color: '#ccc' }}>{project.fundingRoadmap.seed.milestone}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#00d4ff' }}>{project.fundingRoadmap.seed.funding}</div>
+                            <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.fundingRoadmap.seed.timeline} | Val: {project.fundingRoadmap.seed.valuation}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Section>
+                )}
+
+                {/* Exit Scenarios */}
+                {project.exitScenarios && (
+                  <Section title="🚪 EXIT SCENARIOS" color="#f107a3">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', marginBottom: '1rem' }}>
+                      {project.exitScenarios.acquihire && (
+                        <div style={{ background: 'rgba(0,255,136,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                          <div style={{ fontSize: '0.8rem', color: '#00ff88', fontWeight: '700' }}>ACQUI-HIRE ({project.exitScenarios.acquihire.probability})</div>
+                          <div style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '600' }}>{project.exitScenarios.acquihire.value}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#888' }}>Buyer: {project.exitScenarios.acquihire.buyer}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.exitScenarios.acquihire.timeline}</div>
+                        </div>
+                      )}
+                      {project.exitScenarios.strategic && (
+                        <div style={{ background: 'rgba(0,212,255,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                          <div style={{ fontSize: '0.8rem', color: '#00d4ff', fontWeight: '700' }}>STRATEGIC ({project.exitScenarios.strategic.probability})</div>
+                          <div style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '600' }}>{project.exitScenarios.strategic.value}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#888' }}>Buyer: {project.exitScenarios.strategic.buyer}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.exitScenarios.strategic.timeline}</div>
+                        </div>
+                      )}
+                      {project.exitScenarios.shutdown && (
+                        <div style={{ background: 'rgba(255,68,68,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                          <div style={{ fontSize: '0.8rem', color: '#ff4444', fontWeight: '700' }}>SHUTDOWN ({project.exitScenarios.shutdown.probability})</div>
+                          <div style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '600' }}>{project.exitScenarios.shutdown.value}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#888' }}>{project.exitScenarios.shutdown.timeline}</div>
+                        </div>
+                      )}
+                    </div>
+                    {project.exitScenarios.expectedValue && (
+                      <div style={{ background: 'rgba(241,7,163,0.2)', padding: '0.75rem', borderRadius: '8px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#f107a3', fontWeight: '600' }}>EXPECTED VALUE</div>
+                        <div style={{ fontSize: '1rem', color: '#fff', fontWeight: '700' }}>{project.exitScenarios.expectedValue}</div>
+                      </div>
+                    )}
+                  </Section>
+                )}
+
+                {/* Risk Assessment */}
+                {project.riskAssessment && (
+                  <Section title="⚠️ RISK ASSESSMENT" color="#ff4444">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem', marginBottom: '1rem' }}>
+                      {['technicalRisk', 'marketRisk', 'executionRisk', 'competitiveRisk'].map((riskType) => {
+                        const risk = project.riskAssessment[riskType];
+                        if (!risk) return null;
+                        const isHigh = risk.includes('HIGH') || risk.includes('VERY HIGH');
+                        return (
+                          <div key={riskType} style={{
+                            background: isHigh ? 'rgba(255,68,68,0.15)' : 'rgba(255,193,7,0.15)',
+                            padding: '0.5rem',
+                            borderRadius: '6px',
+                            borderLeft: `3px solid ${isHigh ? '#ff4444' : '#ffc107'}`
+                          }}>
+                            <div style={{ fontSize: '0.7rem', color: '#888', textTransform: 'capitalize' }}>{riskType.replace('Risk', ' Risk')}</div>
+                            <div style={{ fontSize: '0.8rem', color: isHigh ? '#ff4444' : '#ffc107', fontWeight: '600' }}>{risk}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {project.riskAssessment.probabilityOfSuccess && (
+                      <div style={{ background: 'rgba(255,68,68,0.1)', padding: '0.75rem', borderRadius: '8px' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#ff4444', fontWeight: '700', marginBottom: '0.5rem' }}>PROBABILITY OF SUCCESS</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '0.5rem' }}>
+                          {Object.entries(project.riskAssessment.probabilityOfSuccess).map(([key, value]) => (
+                            <div key={key} style={{ textAlign: 'center' }}>
+                              <div style={{ fontSize: '1.2rem', color: '#fff', fontWeight: '700' }}>{value as string}</div>
+                              <div style={{ fontSize: '0.7rem', color: '#888' }}>{key.replace(/([A-Z])/g, ' $1').replace('reaching', 'Reach ')}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </Section>
+                )}
+
+{/* Market Context */}
                 {project.marketContext && (
                   <Section title="📊 MARKET CONTEXT" color="#7b2ff7">
                     <InfoRow label="Sector" value={project.marketContext.sector} />
