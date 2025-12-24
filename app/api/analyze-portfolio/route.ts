@@ -257,7 +257,7 @@ FILL ALL NUMBERS:
 
     // Override bountywarz with researched data
     const projects = analysis.projects || [];
-    const bountywarzIndex = projects.findIndex(p => p.name === 'bountywarz');
+    const bountywarzIndex = projects.findIndex((p: any) => p.name === 'bountywarz');
     if (bountywarzIndex !== -1) {
       projects[bountywarzIndex] = {
         ...projects[bountywarzIndex],
@@ -293,7 +293,7 @@ FILL ALL NUMBERS:
       };
     }
     // Recalculate total
-    const newTotal = projects.reduce((sum, p) => sum + (p.riskAdjustedValue || 0), 0);
+    const newTotal = projects.reduce((sum: number, p: any) => sum + (p.riskAdjustedValue || 0), 0);
     analysis.totalValue = newTotal;
     analysis.projects = projects;
 
