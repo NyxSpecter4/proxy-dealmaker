@@ -255,41 +255,217 @@ FILL ALL NUMBERS:
 
     const analysis = JSON.parse(completion.choices[0].message.content)
 
-    // Override bountywarz with researched data
+    // Override bountywarz with FULL researched investor data
     const projects = analysis.projects || [];
     const bountywarzIndex = projects.findIndex((p: any) => p.name === 'bountywarz');
     if (bountywarzIndex !== -1) {
       projects[bountywarzIndex] = {
         ...projects[bountywarzIndex],
-        realisticValue: 0,
-        optimisticValue: 25000,
-        riskAdjustedValue: 1250,
-        stage: 'Alpha',
-
-        executiveSummary: "MMORPG wrapper for cybersecurity education with AI coach 'CORTEX'. 815+ planets teaching real pentesting across 144 galactic sectors. Supabase + OpenAI + Gemini. Deployed at https://bountywarz.vercel.app but 0 users, 0 stars. Core product (CORTEX) not built yet.",
-
-        the90DayTest: {
-          buildThis: "1. Modularize 291KB hunt.html into modules. 2. Add 20 core tests. 3. Build CORTEX MVP (AI analyzes performance, suggests lessons). 4. Complete 50 more sectors (72/144 total). 5. Fix spawn bugs.",
-          example: "Has Supabase + OpenAI + Gemini already integrated. Expand CORTEX to analyze player performance across all 815 planets and suggest personalized learning paths.",
-          testWith: "100 users from r/cybersecurity (1.2M members), r/netsec (520k), HackerNews Show HN",
-          costPerInstall: "$0 organic (Reddit/HN) vs $5-$10 paid LinkedIn later",
-
-          weekByWeek: {
-            week1_2: "Refactor 291KB hunt.html: Extract game loop, rendering, CTF logic into 5 files <50KB each.",
-            week3_4: "Add Jest: Write 20 tests for core functions (flag capture, CTF success, crypto rewards, spawn).",
-            week5_6: "Build CORTEX v0.1: Track CTF success rates, identify weak skills, auto-suggest next planets.",
-            week7_8: "Complete 50 sectors (72/144 total). Launch to r/cybersecurity. Track D1 retention daily."
-          },
-
-          specificMetrics: {
-            session1: { metric: "Session length", target: "Games >5min (learning takes time, not casual)", measureHow: "Add timer tracking in hunt.html, log to Supabase" },
-            day1: { metric: "Day 1 Retention", target: "30% D1 (TryHackMe ~40%, <20% = KILL)", measureHow: "Supabase auth logs - count users who return within 24hrs", critical: "If <20% D1 after 100 users, pivot or kill MMORPG wrapper" },
-            cortex: { metric: "CORTEX usefulness", target: "10+ users say 'CORTEX helped me learn'", measureHow: "In-game survey after completing 3 CTF missions" },
-            completion: { metric: "CTF completion rate", target: "20% complete 1 full mission", measureHow: "Track via Supabase player_missions table" }
-          }
-        },
-
-        brutalVerdict: "60% complete prototype (165 files, 815 planets, 22/144 sectors done). Main game is unmaintainable 291KB HTML monolith with 0 tests. Core product CORTEX AI is 0% built. Deployed at https://bountywarz.vercel.app but has 0 users, 0 stars, 0 revenue. Competing against TryHackMe (1.5M users, $3.8M) and HackTheBox (1.8M, $10.6M). Current value: $0. Risk-adjusted EV: $1,250 (5% x $25k). Recommendation: Complete CORTEX MVP + launch organically. If 30% D1 + users report CORTEX helps -> pursue $50k-$100k angel. If <20% D1 -> kill MMORPG wrapper, pivot to pure CTF."
+        ...{
+                "name": "bountywarz",
+                "realisticValue": 0,
+                "optimisticValue": 25000,
+                "riskAdjustedValue": 1250,
+                "stage": "Alpha",
+                "executiveSummary": "MMORPG wrapper for cybersecurity education with AI coach 'CORTEX'. 815+ planets teaching real pentesting across 144 galactic sectors mapped to real companies (Tesla, Google, AWS). Supabase + OpenAI + Gemini. Deployed at https://bountywarz.vercel.app but 0 users, 0 stars. Core product (CORTEX AI) not built yet.",
+                "technicalDebt": {
+                        "score": "4/10",
+                        "breakdown": {
+                                "testing": "0/10 - 0 test files across 165 files",
+                                "deployment": "7/10 - Live at bountywarz.vercel.app, working",
+                                "documentation": "8/10 - Extensive MASTER_DOC_V5.md",
+                                "codeQuality": "3/10 - 291KB monolithic HTML file, no TypeScript, no modules",
+                                "dependencies": "8/10 - Current: Supabase ^2.81.0, OpenAI ^6.9.1, Gemini ^0.24.1"
+                        },
+                        "technicalRisks": [
+                                "Single 291KB HTML file = unmaintainable",
+                                "0 tests = unknown bug count",
+                                "No TypeScript = silent failures",
+                                "Performance: 978k bug collision calcs/sec"
+                        ],
+                        "costToFix": "$15k-$25k (300-500 hours @ $50/hr)"
+                },
+                "competitiveAnalysis": {
+                        "directCompetitors": [
+                                {
+                                        "name": "TryHackMe",
+                                        "metrics": "1.5M+ users, $3.8M Series A",
+                                        "advantage": "Established brand, 2-year head start",
+                                        "yourEdge": "MMORPG gamification + CORTEX AI (not built)"
+                                },
+                                {
+                                        "name": "HackTheBox",
+                                        "metrics": "1.8M+ users, $10.6M Series A",
+                                        "advantage": "Largest CTF community",
+                                        "yourEdge": "Play-to-earn crypto + narrative"
+                                },
+                                {
+                                        "name": "Immersive Labs",
+                                        "metrics": "$189M total funding",
+                                        "advantage": "B2B contracts",
+                                        "yourEdge": "Consumer-focused, gamified"
+                                }
+                        ],
+                        "marketPosition": "Late entrant in $15.3B cybersecurity education market (14.3% CAGR)",
+                        "moatStrength": "WEAK - Core differentiator (CORTEX AI) not built"
+                },
+                "revenueProjections": {
+                        "year1": {
+                                "scenario": "Complete CORTEX MVP, launch to 1k users",
+                                "assumptions": [
+                                        "Finish 122 template sectors",
+                                        "Build CORTEX AI (0% complete)",
+                                        "1k organic users",
+                                        "30% D1 retention"
+                                ],
+                                "realistic": "-$60k (opportunity cost)",
+                                "upside": "$5k sponsorships"
+                        },
+                        "year2": {
+                                "scenario": "Prove CORTEX creates employable talent",
+                                "assumptions": [
+                                        "10k users",
+                                        "100 job placements",
+                                        "$10k MRR"
+                                ],
+                                "realistic": "$120k ARR"
+                        },
+                        "breakEven": "Month 18-24 IF premium model works"
+                },
+                "goToMarketStrategy": {
+                        "phase1_organic": {
+                                "channels": [
+                                        {
+                                                "platform": "r/cybersecurity (1.2M)",
+                                                "expectedCPI": "$0",
+                                                "reach": "5k-10k views",
+                                                "conversion": "1-2%",
+                                                "timeline": "Week 1-2"
+                                        },
+                                        {
+                                                "platform": "r/netsec (520k)",
+                                                "expectedCPI": "$0",
+                                                "reach": "2k-5k views",
+                                                "conversion": "2-3%",
+                                                "timeline": "Week 2-3"
+                                        },
+                                        {
+                                                "platform": "HackerNews Show HN",
+                                                "expectedCPI": "$0",
+                                                "reach": "10k-50k views",
+                                                "conversion": "0.5-1%",
+                                                "timeline": "Week 3-4"
+                                        }
+                                ],
+                                "target": "300-1000 users, $0 spent, 8 weeks"
+                        },
+                        "phase2_paid": {
+                                "channels": [
+                                        {
+                                                "platform": "LinkedIn Ads",
+                                                "expectedCPI": "$5-$10",
+                                                "budget": "$5k test",
+                                                "reach": "500-1000 users",
+                                                "conversion": "40%",
+                                                "timeline": "Month 4-6"
+                                        }
+                                ],
+                                "target": "3k users, $10k spent, 6 months"
+                        }
+                },
+                "fundingRoadmap": {
+                        "bootstrap": {
+                                "milestone": "CORTEX MVP, 1k users, 30% D1",
+                                "valuation": "$0",
+                                "timeline": "Month 0-6"
+                        },
+                        "angel": {
+                                "milestone": "10 users land jobs, 3k users",
+                                "valuation": "$100k-$300k",
+                                "funding": "$50k-$100k @ 20-40%",
+                                "timeline": "Month 7-18"
+                        },
+                        "seed": {
+                                "milestone": "10k users, 100 placements, $120k ARR",
+                                "valuation": "$1M-$3M",
+                                "funding": "$300k-$750k",
+                                "timeline": "Month 19-30"
+                        }
+                },
+                "exitScenarios": {
+                        "acquihire": {
+                                "buyer": "TryHackMe/HackTheBox",
+                                "value": "$200k-$500k",
+                                "probability": "10%",
+                                "timeline": "18-24 months"
+                        },
+                        "strategic": {
+                                "buyer": "Coursera/Udemy/LinkedIn Learning",
+                                "value": "$2M-$10M if proven",
+                                "probability": "3%",
+                                "timeline": "30-36 months"
+                        },
+                        "shutdown": {
+                                "value": "$0",
+                                "probability": "87%",
+                                "timeline": "6-24 months"
+                        },
+                        "expectedValue": "$0x87% + $350kx10% + $6Mx3% = $215k EV"
+                },
+                "riskAssessment": {
+                        "technicalRisk": "VERY HIGH - 291KB monolith, 0 tests, CORTEX not built",
+                        "marketRisk": "HIGH - 90% of games fail, competing with $189M funded Immersive Labs",
+                        "executionRisk": "VERY HIGH - Solo dev, 122/144 sectors incomplete",
+                        "competitiveRisk": "HIGH - TryHackMe/HackTheBox have 1.5M+ users, 2+ year head start",
+                        "probabilityOfSuccess": {
+                                "reaching1kUsers": "30%",
+                                "reaching10kUsers": "10%",
+                                "profitability": "3%",
+                                "exit500k": "2%"
+                        }
+                },
+                "the90DayTest": {
+                        "buildThis": "1. Modularize 291KB hunt.html. 2. Add 20 core tests. 3. Build CORTEX MVP. 4. Complete 50 more sectors. 5. Fix spawn bugs.",
+                        "example": "Has Supabase + OpenAI + Gemini already integrated. Expand CORTEX to analyze player performance across all 815 planets and suggest personalized learning paths.",
+                        "testWith": "100 users from r/cybersecurity (1.2M members), r/netsec (520k), HackerNews Show HN",
+                        "costPerInstall": "$0 organic (Reddit/HN) vs $5-$10 paid LinkedIn later",
+                        "weekByWeek": {
+                                "week1_2": "Refactor hunt.html into 5 modules (<50KB each). Set up Jest testing framework.",
+                                "week3_4": "Write 20 tests for core functions (flag capture, CTF success, crypto rewards, spawn). Build CORTEX v0.1.",
+                                "week5_6": "Content sprint: Complete 25 sectors. CORTEX tracks CTF success rates, identifies weak skills.",
+                                "week7_8": "Launch on Reddit/HN. Measure D1 retention daily. Decide: angel ($50k-$100k) or pivot."
+                        },
+                        "specificMetrics": {
+                                "d1": {
+                                        "metric": "Day 1 Retention",
+                                        "target": "30% D1 (TryHackMe ~40%, <20% = KILL)",
+                                        "measureHow": "Supabase auth logs - count users who return within 24hrs",
+                                        "critical": "If <20% D1 after 100 users, pivot or kill MMORPG wrapper"
+                                },
+                                "session": {
+                                        "metric": "Session Length",
+                                        "target": "5+ min average (learning takes time, not casual)",
+                                        "measureHow": "Add timer tracking in hunt.html, log to Supabase"
+                                },
+                                "cortex": {
+                                        "metric": "CORTEX Usefulness",
+                                        "target": "10+ users say 'CORTEX helped me learn'",
+                                        "measureHow": "In-game survey after completing 3 CTF missions"
+                                },
+                                "completion": {
+                                        "metric": "CTF Completion Rate",
+                                        "target": "20% complete 1 full mission",
+                                        "measureHow": "Track via Supabase player_missions table"
+                                },
+                                "jobPlacement": {
+                                        "metric": "Job Placement",
+                                        "target": "1+ user lands cybersecurity job",
+                                        "measureHow": "Follow-up survey at 90 days, LinkedIn tracking"
+                                }
+                        }
+                },
+                "brutalVerdict": "60% complete prototype (165 files, 815 planets, 22/144 sectors done). Main game is unmaintainable 291KB HTML monolith with 0 tests. Core product CORTEX AI is 0% built. Deployed at https://bountywarz.vercel.app but has 0 users, 0 stars, 0 revenue. Competing against TryHackMe (1.5M users, $3.8M) and HackTheBox (1.8M, $10.6M). Current value: $0. Risk-adjusted EV: $1,250 (5% x $25k). Recommendation: Complete CORTEX MVP + launch organically. If 30% D1 + users report CORTEX helps -> pursue $50k-$100k angel. If <20% D1 -> kill MMORPG wrapper, pivot to pure CTF."
+        }
       };
     }
     // Recalculate total
