@@ -32,104 +32,120 @@ export async function GET() {
       model: 'gpt-3.5-turbo',
       messages: [{
         role: 'user',
-        content: `You are a startup advisor. Give brutally honest valuations BUT also actionable pivot strategies.
+        content: `You are a startup advisor with access to 2024 industry benchmark data. Give specific, data-backed metrics.
 
 ${JSON.stringify(repoList, null, 2)}
 
-VALUATION REALITY:
-- Pre-traction = $0 realistic value
-- 90% of games fail, 75% of SaaS fail
-- Default to $0 until metrics prove otherwise
+REAL INDUSTRY BENCHMARKS (2024):
+IDLE GAMES: DAU/MAU 18%, Avg Sessions 5.3/day, Session 6-8min, D1 Retention 35-50%, D7 20%+, D30 10%+, CPI $4.83, ARPDAU 9x higher than hyper-casual
+SHOOTER GAMES: $72B market, high CPI, competitive
+SAAS B2B: 3-7x ARR multiple, CAC payback <12mo, churn <5%/mo
 
 Return JSON:
 {
   "totalValue": 0,
-  "portfolioSummary": "Which project to focus on and why - be specific",
-  "topPick": "name of best project to validate",
+  "portfolioSummary": "Which project to focus on and why",
+  "topPick": "best project name",
   "projects": [{
     "name": "repo-name",
     "realisticValue": 0,
     "optimisticValue": 10000,
     "stage": "Concept/Pre-MVP/MVP/Traction",
 
-    "validationFramework": {
-      "shouldValidate": true,
-      "reasoning": "Has unique angle worth testing / Saturated market, no moat",
+    "the90DayTest": {
+      "buildThis": "5-min vertical slice of core mechanic (NOT full product)",
+      "example": "Single level/workflow testing core loop",
+      "testWith": "100 users from Reddit, Discord, ProductHunt",
+      "costPerInstall": "$0 organic vs $X industry average",
 
-      "the90DayTest": {
-        "buildThis": "NOT full product - build vertical slice testing core loop",
-        "example": "5-min bug blasting shooter (not full MMORPG)",
-        "metric": "100 people try it, measure engagement >5min",
-        "successCriteria": "If 30%+ want more -> validate. If <10% -> pivot or kill.",
-        "cost": "2-4 weeks part-time work"
+      "specificMetrics": {
+        "session1": {
+          "metric": "Session length",
+          "target": ">X minutes (industry: Ymin)",
+          "measureHow": "Analytics or timer tracking"
+        },
+        "day1": {
+          "metric": "Day 1 Retention",
+          "target": "X%+ (industry: Y% for this sector)",
+          "measureHow": "Track return users",
+          "critical": "KEY METRIC - if <X% kill it"
+        },
+        "engagement": {
+          "metric": "Daily sessions or usage",
+          "target": "X+ per week (industry: Y)",
+          "measureHow": "Track per user"
+        },
+        "stickiness": {
+          "metric": "DAU/MAU or equivalent",
+          "target": ">X% (industry: Y%)",
+          "measureHow": "Active today / active this month"
+        }
       },
 
-      "strategicPivots": [
-        {
-          "scenario": "If users love X but ignore Y",
-          "pivot": "Drop Y, double down on X",
-          "reasoning": "Follow the engagement, not the original plan",
-          "newMarket": "Bigger market, lower barrier"
-        }
-      ],
+      "successDecision": {
+        "strong": "Metric >X% -> proceed to full MVP",
+        "moderate": "Metric Y-X% -> test more, iterate",
+        "weak": "Metric <Y% -> pivot or kill"
+      },
 
-      "intelligentShelving": {
-        "if": "Validation fails after 90-day test",
-        "then": "Don't abandon - shelve strategically",
-        "salvageValue": [
-          "Reusable code components",
-          "Portfolio piece",
-          "Learning experience"
-        ]
+      "timeline": {
+        "week1_2": "Build minimal prototype",
+        "week3_4": "Get 100 testers organically",
+        "week5_6": "Measure retention + engagement",
+        "week7_8": "Analyze, decide: proceed/pivot/kill"
       }
     },
 
-    "industryBenchmarks": {
+    "marketContext": {
       "sector": "Gaming/SaaS/Tool",
-      "failureRate": "90% fail commercially",
-      "successMetric": "20-27% retention for games / $5k MRR for SaaS",
-      "dominantModel": "Free-to-play / Freemium / B2B"
+      "marketSize": "$XB market",
+      "advantage": "What gives this project an edge",
+      "challenge": "Main obstacle to success",
+      "competition": "Who dominates and why"
     },
 
-    "microMVP": {
-      "whatToBuild": "Smallest thing that tests riskiest assumption",
-      "example": "Single level / One workflow / One customer type",
-      "timeline": "2-4 weeks max",
-      "userTarget": "100 testers from Reddit/Discord",
-      "criticalQuestion": "Is the CORE MECHANIC fun/useful?"
-    },
-
-    "decisionFramework": {
-      "passion": "Love this idea or just want money?",
-      "resources": "Can afford 3-6 months with 90% failure risk?",
-      "skillDevelopment": "Will this improve portfolio regardless?",
-      "recommendation": "Validate / Pivot / Shelve"
-    },
-
-    "immediateActions": [
+    "organicTestingChannels": [
       {
-        "week1": "Build absolute minimum testable core",
-        "week2_3": "Get 100 people to try it",
-        "week4": "Measure engagement metrics",
-        "decision": "If >30% engaged -> continue. If <10% -> pivot."
+        "platform": "Reddit subreddits",
+        "expectedReach": "X views, Y testers",
+        "cost": "$0"
+      },
+      {
+        "platform": "Discord servers",
+        "expectedReach": "Direct access to users",
+        "cost": "$0"
+      },
+      {
+        "platform": "Platform-specific (itch.io, ProductHunt)",
+        "expectedReach": "X views if featured",
+        "cost": "$0"
       }
     ],
 
-    "pivotOpportunities": [
-      "Specific pivot based on what could work",
-      "Alternative market or format"
-    ],
+    "pivotTriggers": {
+      "ifFeatureAWorks": "Scenario -> specific pivot",
+      "ifFeatureBFails": "Scenario -> alternative direction",
+      "ifRetentionLow": "Core loop broken -> salvage strategy"
+    },
 
-    "brutalVerdict": "Worth $0 now. Has X% chance. Recommend: Validate/Pivot/Shelve because [reason]."
+    "nextMilestones": {
+      "after90Days": {
+        "ifValidated": "Next steps with specific targets",
+        "funding": "What metrics attract investment",
+        "valuation": "How value increases with proven metrics"
+      }
+    },
+
+    "brutalVerdict": "Worth $X now. Test with 100 users. If [key metric] >Y%, you have something. If <Z%, kill it. [Market context]. [Specific advantage or disadvantage]."
   }]
 }
 
 CRITICAL:
-1. Give SPECIFIC micro-MVP to build (not full product)
-2. Include pivot strategies based on test results
-3. Give 90-day validation timeline with metrics
-4. Tell them WHEN to pivot vs kill
-5. Focus on ONE project with best validation potential`
+1. Use REAL benchmark numbers from 2024 data for the sector
+2. Give specific platforms to find testers
+3. Identify THE key metric for this project type
+4. Explain what each metric means and how to measure
+5. Give clear decision criteria (>X% proceed, <Y% kill)`
       }],
       response_format: { type: 'json_object' }
     })
