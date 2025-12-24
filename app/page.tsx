@@ -48,8 +48,21 @@ export default function Home() {
   }
 
   const SectionHeader = ({ title, color }: { title: string; color: string }) => (
-    <div style={{ fontSize: '0.7rem', color, fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
+    <div style={{ fontSize: '0.8rem', color, fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
       {title}
+    </div>
+  )
+
+  const SubSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
+      <div style={{ fontSize: '0.75rem', color: '#00d4ff', fontWeight: '700', marginBottom: '0.75rem' }}>{title}</div>
+      {children}
+    </div>
+  )
+
+  const InfoRow = ({ label, value, color = '#ccc' }: { label: string; value: string; color?: string }) => (
+    <div style={{ fontSize: '0.85rem', marginBottom: '0.3rem' }}>
+      <span style={{ color: '#888' }}>{label}:</span> <span style={{ color }}>{value}</span>
     </div>
   )
 
@@ -112,137 +125,181 @@ export default function Home() {
           <div style={{ textAlign: 'center', color: '#ff4444' }}>{analysis.error}</div>
         ) : (
           <>
+            {/* Portfolio Summary */}
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
               <div style={{ fontSize: '3rem', fontWeight: '900', color: '#00d4ff' }}>
-                ${analysis?.totalValue?.toLocaleString() || '---'}
+                ${analysis?.totalValue?.toLocaleString() || '0'}
               </div>
               <div style={{ fontSize: '0.9rem', color: '#888', marginTop: '0.5rem' }}>Total Portfolio Valuation</div>
               {analysis?.portfolioSummary && (
-                <div style={{ fontSize: '0.9rem', color: '#aaa', marginTop: '1rem', maxWidth: '600px', margin: '1rem auto 0', lineHeight: '1.5' }}>
+                <div style={{ fontSize: '0.9rem', color: '#aaa', marginTop: '1rem', maxWidth: '700px', margin: '1rem auto 0', lineHeight: '1.6' }}>
                   {analysis.portfolioSummary}
                 </div>
               )}
             </div>
 
+            {/* Top Pick Banner */}
+            {analysis?.topPick && (
+              <div style={{
+                background: 'linear-gradient(90deg, rgba(0,255,136,0.2), rgba(0,212,255,0.2))',
+                border: '2px solid #00ff88',
+                borderRadius: '12px',
+                padding: '1rem 1.5rem',
+                marginBottom: '2rem',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#00ff88' }}>
+                  🎯 RECOMMENDED FOCUS: {analysis.topPick}
+                </div>
+              </div>
+            )}
+
+            {/* Projects */}
             {analysis?.projects?.map((project: any, index: number) => (
               <div key={project.name || index} style={{
                 background: 'rgba(0,0,0,0.4)', borderRadius: '16px', padding: '1.5rem',
-                marginBottom: '1.5rem', border: '1px solid rgba(123,47,247,0.3)'
+                marginBottom: '2rem', border: '1px solid rgba(123,47,247,0.3)'
               }}>
-                {/* Header with name */}
-                <h3 style={{ margin: '0 0 1rem', fontSize: '1.4rem', color: '#00d4ff' }}>{project.name}</h3>
+                {/* Header */}
+                <h3 style={{ margin: '0 0 1rem', fontSize: '1.5rem', color: '#00d4ff' }}>{project.name}</h3>
 
-                {/* Value Comparison */}
-                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-                  <div style={{ background: 'rgba(255,68,68,0.1)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,68,68,0.3)' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#ff4444', fontWeight: '700', letterSpacing: '0.05em' }}>CURRENT VALUE</div>
-                    <div style={{ fontSize: '1.3rem', fontWeight: '700', color: '#ff4444' }}>${project.realisticValue?.toLocaleString() || '0'}</div>
+                {/* Values Row */}
+                <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                  <div style={{ background: 'rgba(255,68,68,0.15)', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,68,68,0.3)' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#ff4444', fontWeight: '700' }}>CURRENT</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#ff4444' }}>${project.realisticValue?.toLocaleString() || '0'}</div>
                   </div>
-                  <div style={{ background: 'rgba(0,255,136,0.1)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(0,255,136,0.3)' }}>
-                    <div style={{ fontSize: '0.65rem', color: '#00ff88', fontWeight: '700', letterSpacing: '0.05em' }}>POTENTIAL (IF EXECUTED)</div>
-                    <div style={{ fontSize: '1.3rem', fontWeight: '700', color: '#00ff88' }}>${project.optimisticValue?.toLocaleString() || '0'}</div>
+                  <div style={{ background: 'rgba(0,255,136,0.15)', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid rgba(0,255,136,0.3)' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#00ff88', fontWeight: '700' }}>POTENTIAL</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#00ff88' }}>${project.optimisticValue?.toLocaleString() || '0'}</div>
+                  </div>
+                  <div style={{ background: 'rgba(123,47,247,0.15)', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid rgba(123,47,247,0.3)' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#7b2ff7', fontWeight: '700' }}>STAGE</div>
+                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#7b2ff7' }}>{project.stage}</div>
                   </div>
                 </div>
 
-                {/* Description */}
-                <p style={{ fontSize: '0.9rem', color: '#ccc', marginBottom: '1rem', lineHeight: '1.5' }}>
-                  {project.description}
-                </p>
-
-                {/* Stage */}
-                <div style={{ marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#7b2ff7', background: 'rgba(123,47,247,0.2)', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: '600' }}>
-                    Stage: {project.stage}
-                  </span>
-                </div>
-
-                {/* Valuation Gaps */}
-                {project.valuationGaps?.length > 0 && (
-                  <div style={{ background: 'rgba(255,68,68,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', border: '1px solid rgba(255,68,68,0.2)' }}>
-                    <SectionHeader title="⚠️ VALUATION GAPS" color="#ff4444" />
-                    <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
-                      {project.valuationGaps.map((gap: string, i: number) => (
-                        <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{gap}</li>
-                      ))}
-                    </ul>
+                {/* Validation Framework */}
+                <div style={{
+                  background: project.validationFramework?.shouldValidate ? 'rgba(0,255,136,0.1)' : 'rgba(255,68,68,0.1)',
+                  border: project.validationFramework?.shouldValidate ? '1px solid rgba(0,255,136,0.3)' : '1px solid rgba(255,68,68,0.3)',
+                  borderRadius: '12px',
+                  padding: '1.25rem',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div style={{ fontSize: '1rem', fontWeight: '700', color: project.validationFramework?.shouldValidate ? '#00ff88' : '#ff4444', marginBottom: '0.5rem' }}>
+                    {project.validationFramework?.shouldValidate ? '✅ Worth Validating' : '❌ Not Worth Validating'}
                   </div>
-                )}
-
-                {/* Industry Reality */}
-                {project.industryReality && (
-                  <div style={{ background: 'rgba(0,212,255,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
-                    <SectionHeader title="INDUSTRY REALITY" color="#00d4ff" />
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem' }}>
-                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Sector:</span> <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{project.industryReality.sector}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Failure Rate:</span> <span style={{ color: '#ff4444', fontSize: '0.85rem' }}>{project.industryReality.failureRate}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Key Metric:</span> <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{project.industryReality.keyMetric}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Current:</span> <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{project.industryReality.currentMetric}</span></div>
-                    </div>
-                    <div style={{ marginTop: '0.5rem' }}><span style={{ color: '#666', fontSize: '0.75rem' }}>Competition:</span> <span style={{ color: '#f107a3', fontSize: '0.85rem' }}>{project.industryReality.competition}</span></div>
+                  <div style={{ fontSize: '0.9rem', color: '#ccc', marginBottom: '1rem' }}>
+                    {project.validationFramework?.reasoning}
                   </div>
-                )}
 
-                {/* Scorecard Assessment */}
-                {project.scorecardAssessment && (
-                  <div style={{ marginBottom: '1rem' }}>
-                    <SectionHeader title="SCORECARD ASSESSMENT" color="#7b2ff7" />
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.5rem', background: 'rgba(123,47,247,0.1)', padding: '1rem', borderRadius: '8px' }}>
-                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Idea:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.idea}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Team:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.team}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>MVP:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.mvp}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Market Fit:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.marketFit}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Traction:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.traction}</span></div>
-                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Moat:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.moat}</span></div>
-                    </div>
-                  </div>
-                )}
+                  {project.validationFramework?.shouldValidate && (
+                    <>
+                      {/* 90-Day Test */}
+                      <SubSection title="📋 THE 90-DAY TEST">
+                        <InfoRow label="Build" value={project.validationFramework?.the90DayTest?.buildThis} color="#fff" />
+                        <InfoRow label="Example" value={project.validationFramework?.the90DayTest?.example} />
+                        <InfoRow label="Metric" value={project.validationFramework?.the90DayTest?.metric} color="#00d4ff" />
+                        <InfoRow label="Success" value={project.validationFramework?.the90DayTest?.successCriteria} color="#00ff88" />
+                        <InfoRow label="Time Cost" value={project.validationFramework?.the90DayTest?.cost} />
+                      </SubSection>
 
-                {/* Path to Value */}
-                {project.pathToValue && (
-                  <div style={{
-                    background: project.pathToValue.isViable ? 'rgba(0,255,136,0.1)' : 'rgba(255,68,68,0.1)',
-                    borderRadius: '8px', padding: '1rem', marginBottom: '1rem',
-                    border: project.pathToValue.isViable ? '1px solid rgba(0,255,136,0.3)' : '1px solid rgba(255,68,68,0.3)'
-                  }}>
-                    <SectionHeader title={project.pathToValue.isViable ? '✅ PATH TO VALUE - VIABLE' : '❌ PATH TO VALUE - NOT VIABLE'} color={project.pathToValue.isViable ? '#00ff88' : '#ff4444'} />
-                    {project.pathToValue.criticalMetrics?.length > 0 && (
-                      <div style={{ marginBottom: '0.5rem' }}>
-                        <div style={{ fontSize: '0.7rem', color: '#888', marginBottom: '0.25rem' }}>Critical Metrics:</div>
-                        <ol style={{ margin: 0, paddingLeft: '1.2rem' }}>
-                          {project.pathToValue.criticalMetrics.map((m: string, i: number) => (
-                            <li key={i} style={{ fontSize: '0.8rem', color: '#ccc', marginBottom: '0.15rem' }}>{m}</li>
+                      {/* Micro-MVP */}
+                      <SubSection title="🔬 MICRO-MVP PLAN">
+                        <InfoRow label="What to Build" value={project.microMVP?.whatToBuild} color="#fff" />
+                        <InfoRow label="Example" value={project.microMVP?.example} />
+                        <InfoRow label="Timeline" value={project.microMVP?.timeline} color="#00d4ff" />
+                        <InfoRow label="Test With" value={project.microMVP?.userTarget} />
+                        <InfoRow label="Key Question" value={project.microMVP?.criticalQuestion} color="#f107a3" />
+                      </SubSection>
+
+                      {/* Immediate Actions */}
+                      {project.immediateActions?.length > 0 && (
+                        <SubSection title="📅 WEEK-BY-WEEK PLAN">
+                          {project.immediateActions.map((action: any, i: number) => (
+                            <div key={i} style={{ marginBottom: '0.5rem' }}>
+                              {Object.entries(action).map(([week, task]) => (
+                                <InfoRow key={week} label={week.replace('_', '-')} value={task as string} />
+                              ))}
+                            </div>
                           ))}
-                        </ol>
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.8rem' }}>
-                      <div><span style={{ color: '#666' }}>Time to Proof:</span> <span style={{ color: '#ccc' }}>{project.pathToValue.timeToProof}</span></div>
-                      <div><span style={{ color: '#666' }}>Success Rate:</span> <span style={{ color: '#ff4444' }}>{project.pathToValue.probabilityOfSuccess}</span></div>
-                    </div>
-                  </div>
-                )}
+                        </SubSection>
+                      )}
 
-                {/* Next Steps */}
-                {project.nextSteps?.length > 0 && (
-                  <div style={{ marginBottom: '1rem' }}>
-                    <SectionHeader title="NEXT STEPS" color="#00d4ff" />
-                    <ol style={{ margin: 0, paddingLeft: '1.2rem' }}>
-                      {project.nextSteps.map((step: string, i: number) => (
-                        <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{step}</li>
-                      ))}
-                    </ol>
-                  </div>
-                )}
+                      {/* Strategic Pivots */}
+                      {project.validationFramework?.strategicPivots?.length > 0 && (
+                        <SubSection title="🔄 IF TEST RESULTS SHOW...">
+                          {project.validationFramework.strategicPivots.map((pivot: any, i: number) => (
+                            <div key={i} style={{ background: 'rgba(241,7,163,0.1)', padding: '0.75rem', borderRadius: '6px', marginBottom: '0.5rem' }}>
+                              <InfoRow label="Scenario" value={pivot.scenario} color="#f107a3" />
+                              <InfoRow label="→ Pivot to" value={pivot.pivot} color="#00ff88" />
+                              <InfoRow label="Why" value={pivot.reasoning} />
+                              {pivot.newMarket && <InfoRow label="New Market" value={pivot.newMarket} color="#00d4ff" />}
+                            </div>
+                          ))}
+                        </SubSection>
+                      )}
 
-                {/* Brutal Truth Verdict */}
-                {project.brutalTruth && (
-                  <div style={{ background: 'linear-gradient(90deg, rgba(123,47,247,0.2), rgba(241,7,163,0.2))', borderRadius: '8px', padding: '1rem', borderLeft: '4px solid #f107a3' }}>
-                    <SectionHeader title="VERDICT" color="#f107a3" />
-                    <div style={{ fontSize: '0.95rem', color: '#fff', fontWeight: '600' }}>
-                      {project.brutalTruth}
-                    </div>
+                      {/* Pivot Opportunities */}
+                      {project.pivotOpportunities?.length > 0 && (
+                        <SubSection title="💡 ALTERNATIVE DIRECTIONS">
+                          <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+                            {project.pivotOpportunities.map((opp: string, i: number) => (
+                              <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{opp}</li>
+                            ))}
+                          </ul>
+                        </SubSection>
+                      )}
+
+                      {/* Intelligent Shelving */}
+                      <SubSection title="📦 IF VALIDATION FAILS">
+                        <InfoRow label="When" value={project.validationFramework?.intelligentShelving?.if} />
+                        <InfoRow label="Action" value={project.validationFramework?.intelligentShelving?.then} color="#7b2ff7" />
+                        <div style={{ marginTop: '0.5rem' }}>
+                          <span style={{ fontSize: '0.85rem', color: '#888' }}>Salvage Value:</span>
+                          <ul style={{ margin: '0.25rem 0 0', paddingLeft: '1.2rem' }}>
+                            {project.validationFramework?.intelligentShelving?.salvageValue?.map((v: string, i: number) => (
+                              <li key={i} style={{ fontSize: '0.8rem', color: '#ccc', marginBottom: '0.15rem' }}>{v}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </SubSection>
+                    </>
+                  )}
+                </div>
+
+                {/* Industry Benchmarks */}
+                <SubSection title="📊 INDUSTRY REALITY">
+                  <InfoRow label="Sector" value={project.industryBenchmarks?.sector} />
+                  <InfoRow label="Failure Rate" value={project.industryBenchmarks?.failureRate} color="#ff4444" />
+                  <InfoRow label="Success Metric" value={project.industryBenchmarks?.successMetric} color="#00ff88" />
+                  <InfoRow label="Business Model" value={project.industryBenchmarks?.dominantModel} />
+                </SubSection>
+
+                {/* Decision Framework */}
+                <SubSection title="🤔 BEFORE YOU DECIDE">
+                  <InfoRow label="Passion Check" value={project.decisionFramework?.passion} />
+                  <InfoRow label="Resource Reality" value={project.decisionFramework?.resources} />
+                  <InfoRow label="Skill Value" value={project.decisionFramework?.skillDevelopment} />
+                  <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'rgba(123,47,247,0.2)', borderRadius: '6px' }}>
+                    <span style={{ fontSize: '0.9rem', color: '#7b2ff7', fontWeight: '700' }}>→ Recommendation: </span>
+                    <span style={{ fontSize: '0.9rem', color: '#fff' }}>{project.decisionFramework?.recommendation}</span>
                   </div>
-                )}
+                </SubSection>
+
+                {/* Brutal Verdict */}
+                <div style={{
+                  background: 'linear-gradient(90deg, rgba(123,47,247,0.2), rgba(241,7,163,0.2))',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  borderLeft: '4px solid #f107a3'
+                }}>
+                  <div style={{ fontSize: '0.75rem', color: '#f107a3', fontWeight: '700', marginBottom: '0.5rem' }}>VERDICT</div>
+                  <div style={{ fontSize: '0.95rem', color: '#fff', fontWeight: '600', lineHeight: '1.5' }}>
+                    {project.brutalVerdict}
+                  </div>
+                </div>
               </div>
             ))}
           </>
