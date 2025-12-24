@@ -47,6 +47,12 @@ export default function Home() {
     setGeneratingBrand(false)
   }
 
+  const SectionHeader = ({ title, color }: { title: string; color: string }) => (
+    <div style={{ fontSize: '0.7rem', color, fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
+      {title}
+    </div>
+  )
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -123,11 +129,18 @@ export default function Home() {
                 background: 'rgba(0,0,0,0.4)', borderRadius: '16px', padding: '1.5rem',
                 marginBottom: '1.5rem', border: '1px solid rgba(123,47,247,0.3)'
               }}>
-                {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.3rem', color: '#00d4ff' }}>{project.name}</h3>
-                  <div style={{ fontSize: '1.4rem', fontWeight: '700', color: '#00ff88' }}>
-                    ${project.value?.toLocaleString()}
+                {/* Header with name */}
+                <h3 style={{ margin: '0 0 1rem', fontSize: '1.4rem', color: '#00d4ff' }}>{project.name}</h3>
+
+                {/* Value Comparison */}
+                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                  <div style={{ background: 'rgba(255,68,68,0.1)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,68,68,0.3)' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#ff4444', fontWeight: '700', letterSpacing: '0.05em' }}>CURRENT VALUE</div>
+                    <div style={{ fontSize: '1.3rem', fontWeight: '700', color: '#ff4444' }}>${project.realisticValue?.toLocaleString() || '0'}</div>
+                  </div>
+                  <div style={{ background: 'rgba(0,255,136,0.1)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(0,255,136,0.3)' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#00ff88', fontWeight: '700', letterSpacing: '0.05em' }}>POTENTIAL (IF EXECUTED)</div>
+                    <div style={{ fontSize: '1.3rem', fontWeight: '700', color: '#00ff88' }}>${project.optimisticValue?.toLocaleString() || '0'}</div>
                   </div>
                 </div>
 
@@ -136,69 +149,100 @@ export default function Home() {
                   {project.description}
                 </p>
 
-                {/* Market Reality */}
-                <div style={{ background: 'rgba(0,212,255,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#00d4ff', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                    MARKET REALITY
-                  </div>
-                  <div style={{ fontSize: '0.9rem', color: '#fff' }}>
-                    {project.marketReality}
-                  </div>
-                </div>
-
-                {/* Strengths & Weaknesses */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#00ff88', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                      STRENGTHS
-                    </div>
-                    {project.strengths?.map((s: string, i: number) => (
-                      <div key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>+ {s}</div>
-                    ))}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '0.7rem', color: '#ff4444', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                      WEAKNESSES
-                    </div>
-                    {project.weaknesses?.map((w: string, i: number) => (
-                      <div key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>- {w}</div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Competition */}
+                {/* Stage */}
                 <div style={{ marginBottom: '1rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#f107a3', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                    COMPETITION
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: '#ccc' }}>
-                    {project.competition}
-                  </div>
+                  <span style={{ fontSize: '0.75rem', color: '#7b2ff7', background: 'rgba(123,47,247,0.2)', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: '600' }}>
+                    Stage: {project.stage}
+                  </span>
                 </div>
 
-                {/* Pivot Idea */}
-                {project.pivotIdea && (
-                  <div style={{ background: 'rgba(123,47,247,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#7b2ff7', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                      PIVOT IDEA
+                {/* Valuation Gaps */}
+                {project.valuationGaps?.length > 0 && (
+                  <div style={{ background: 'rgba(255,68,68,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', border: '1px solid rgba(255,68,68,0.2)' }}>
+                    <SectionHeader title="⚠️ VALUATION GAPS" color="#ff4444" />
+                    <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
+                      {project.valuationGaps.map((gap: string, i: number) => (
+                        <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{gap}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Industry Reality */}
+                {project.industryReality && (
+                  <div style={{ background: 'rgba(0,212,255,0.1)', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
+                    <SectionHeader title="INDUSTRY REALITY" color="#00d4ff" />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem' }}>
+                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Sector:</span> <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{project.industryReality.sector}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Failure Rate:</span> <span style={{ color: '#ff4444', fontSize: '0.85rem' }}>{project.industryReality.failureRate}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Key Metric:</span> <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{project.industryReality.keyMetric}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.75rem' }}>Current:</span> <span style={{ color: '#ccc', fontSize: '0.85rem' }}>{project.industryReality.currentMetric}</span></div>
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: '#fff' }}>
-                      {project.pivotIdea}
+                    <div style={{ marginTop: '0.5rem' }}><span style={{ color: '#666', fontSize: '0.75rem' }}>Competition:</span> <span style={{ color: '#f107a3', fontSize: '0.85rem' }}>{project.industryReality.competition}</span></div>
+                  </div>
+                )}
+
+                {/* Scorecard Assessment */}
+                {project.scorecardAssessment && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <SectionHeader title="SCORECARD ASSESSMENT" color="#7b2ff7" />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.5rem', background: 'rgba(123,47,247,0.1)', padding: '1rem', borderRadius: '8px' }}>
+                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Idea:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.idea}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Team:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.team}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>MVP:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.mvp}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Market Fit:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.marketFit}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Traction:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.traction}</span></div>
+                      <div><span style={{ color: '#666', fontSize: '0.7rem' }}>Moat:</span> <span style={{ color: '#ccc', fontSize: '0.8rem' }}>{project.scorecardAssessment.moat}</span></div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Path to Value */}
+                {project.pathToValue && (
+                  <div style={{
+                    background: project.pathToValue.isViable ? 'rgba(0,255,136,0.1)' : 'rgba(255,68,68,0.1)',
+                    borderRadius: '8px', padding: '1rem', marginBottom: '1rem',
+                    border: project.pathToValue.isViable ? '1px solid rgba(0,255,136,0.3)' : '1px solid rgba(255,68,68,0.3)'
+                  }}>
+                    <SectionHeader title={project.pathToValue.isViable ? '✅ PATH TO VALUE - VIABLE' : '❌ PATH TO VALUE - NOT VIABLE'} color={project.pathToValue.isViable ? '#00ff88' : '#ff4444'} />
+                    {project.pathToValue.criticalMetrics?.length > 0 && (
+                      <div style={{ marginBottom: '0.5rem' }}>
+                        <div style={{ fontSize: '0.7rem', color: '#888', marginBottom: '0.25rem' }}>Critical Metrics:</div>
+                        <ol style={{ margin: 0, paddingLeft: '1.2rem' }}>
+                          {project.pathToValue.criticalMetrics.map((m: string, i: number) => (
+                            <li key={i} style={{ fontSize: '0.8rem', color: '#ccc', marginBottom: '0.15rem' }}>{m}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.8rem' }}>
+                      <div><span style={{ color: '#666' }}>Time to Proof:</span> <span style={{ color: '#ccc' }}>{project.pathToValue.timeToProof}</span></div>
+                      <div><span style={{ color: '#666' }}>Success Rate:</span> <span style={{ color: '#ff4444' }}>{project.pathToValue.probabilityOfSuccess}</span></div>
                     </div>
                   </div>
                 )}
 
                 {/* Next Steps */}
-                <div>
-                  <div style={{ fontSize: '0.7rem', color: '#00d4ff', fontWeight: '700', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
-                    NEXT STEPS
+                {project.nextSteps?.length > 0 && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <SectionHeader title="NEXT STEPS" color="#00d4ff" />
+                    <ol style={{ margin: 0, paddingLeft: '1.2rem' }}>
+                      {project.nextSteps.map((step: string, i: number) => (
+                        <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                  <ol style={{ margin: 0, paddingLeft: '1.2rem' }}>
-                    {project.nextSteps?.map((step: string, i: number) => (
-                      <li key={i} style={{ fontSize: '0.85rem', color: '#ccc', marginBottom: '0.25rem' }}>{step}</li>
-                    ))}
-                  </ol>
-                </div>
+                )}
+
+                {/* Brutal Truth Verdict */}
+                {project.brutalTruth && (
+                  <div style={{ background: 'linear-gradient(90deg, rgba(123,47,247,0.2), rgba(241,7,163,0.2))', borderRadius: '8px', padding: '1rem', borderLeft: '4px solid #f107a3' }}>
+                    <SectionHeader title="VERDICT" color="#f107a3" />
+                    <div style={{ fontSize: '0.95rem', color: '#fff', fontWeight: '600' }}>
+                      {project.brutalTruth}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </>
