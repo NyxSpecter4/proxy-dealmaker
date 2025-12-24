@@ -65,7 +65,7 @@ export default function Home() {
       alignItems: 'center'
     }}>
       <div style={{ marginBottom: '1rem' }}>
-        <Image src={logoUrl} alt="MAKO THOTH" width={120} height={120} style={{ borderRadius: '12px' }} />
+        <Image src={logoUrl} alt="MAKO THOTH" width={240} height={240} style={{ borderRadius: '12px' }} />
       </div>
 
       <h1 style={{
